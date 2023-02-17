@@ -8,8 +8,7 @@ router.get("/signup", (req, res) => {
 });
 
 router.post("/signup", async (req, res, next) => {
-  const { email, password } = req.body;
-  const username = email.split("@")[0];
+  const { email, password, username } = req.body;
 
   try {
     await User.create({
@@ -18,6 +17,8 @@ router.post("/signup", async (req, res, next) => {
       username,
       blogName: capitalize(username),
     });
+
+    res.redirect("/");
   } catch (error) {
     next(error);
   }
