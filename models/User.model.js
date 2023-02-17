@@ -5,7 +5,6 @@ const userSchema = new Schema(
     username: {
       type: String,
       trim: true,
-      required: false,
       unique: true,
     },
     email: {
@@ -25,7 +24,10 @@ const userSchema = new Schema(
       unique: true,
     },
     favourites: [String],
-    image: String,
+    image: {
+      type: String,
+      default: "https://cdn-icons-png.flaticon.com/512/33/33724.png",
+    },
   },
   {
     timestamps: true,
