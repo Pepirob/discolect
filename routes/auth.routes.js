@@ -28,4 +28,38 @@ router.post("/signup", async (req, res, next) => {
   }
 });
 
+router.get("/login", (req, res) => {
+  res.render("auth/form-login.hbs");
+});
+
+router.post("/login", async (req, res, next) => {
+  const { username, password } = req.body;
+
+  try {
+    const foundUser = await User.findOne({ username });
+
+    if (!foundUser) {
+      res.render("auth/form-login.hbs", {
+        errorMesage: "User with username doesn't exists",
+      });
+      return;
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      foundUser.password
+    );
+
+    if (!isPasswordCorrect) {
+      res.render("auth/form-login.hbs", {
+        errorMesage: "Invalid password",
+      });
+      return;
+    }
+    res.redirect("/");
+  } catch (error) {
+    next(err);
+  }
+});
+
 module.exports = router;
