@@ -14,6 +14,31 @@ router.post("/signup", async (req, res, next) => {
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(password, salt);
 
+  if (!username || !email || !password) {
+    res.render("auth/form-signup.hbs", {
+      errorMesage: "All fields must be filled",
+    });
+    return;
+  }
+
+  if (password.length < 9 || password.length > 15) {
+    res.render("auth/form-signup.hbs", {
+      errorMesage:
+        "password must containt at least 9 characters and no more than 15",
+    });
+    return;
+  }
+
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{9,}$/;
+
+  if (passwordRegex !== password) {
+    res.render("auth/form-signup.hbs", {
+      errorMesage:
+        "must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number",
+    });
+    return;
+  }
+
   try {
     await User.create({
       email,
