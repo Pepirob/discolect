@@ -19,14 +19,35 @@ router.get("/", isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.get("/edit", isLoggedIn, (req, res, next) => {
-  const { username, email, image } = req.session.activeUser;
+router.get("/edit", isLoggedIn, async (req, res, next) => {
+  const { _id } = req.session.activeUser;
+  try {
+    const foundUser = await User.findById(_id);
 
-  res.render("profile/form-edit.hbs", {
-    username,
-    email,
-    image,
-  });
+    res.render("profile/form-edit.hbs", {
+      username: foundUser.username,
+      email: foundUser.email,
+      image: foundUser.image,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
+router.post("/edit", async (req, res, next) => {
+  const { username, email } = req.body;
+  try {
+    await User.findByIdAndUpdate(
+      req.session.activeUser._id,
+      {
+        username,
+        email,
+      },
+      { new: true }
+    );
+    res.redirect("/profile");
+  } catch (error) {
+    next(error);
+  }
+});
 module.exports = router;
