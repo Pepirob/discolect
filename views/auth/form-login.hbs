@@ -7,5 +7,8 @@
   <label for="password">PASSWORD: </label>
   <input type="text" name="password" required />
   <br />
+  {{#if errorMesage}}
+  <p style="color:red;">{{errorMesage}}</p>
+  {{/if}}
   <button>LOGIN</button>
 </form>

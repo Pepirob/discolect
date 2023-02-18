@@ -22,7 +22,7 @@ router.post("/signup", async (req, res, next) => {
       blogName: capitalize(username),
     });
 
-    res.redirect("/");
+    res.redirect("/auth/login");
   } catch (error) {
     next(error);
   }
