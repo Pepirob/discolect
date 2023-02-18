@@ -1,6 +1,12 @@
 <h2>Edit profile</h2>
 
-<form action="/profile/edit" method="post">
+<form action="/profile/edit" method="post" enctype="multipart/form-data">
+  <img src="{{image}}" alt="this is a picture of {{username}}" width="200px" />
+  <label for="avatar">AVATAR:
+    <br />
+  </label>
+  <input type="file" name="avatar" />
+  <br />
   <label for="username">USERNAME: </label>
   <input
     type="text"
