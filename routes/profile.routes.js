@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const fileUploader = require("../config/cloudinary.config");
+
 const { isLoggedIn } = require("../middleware/auth");
 const User = require("../models/User.model");
 
@@ -34,7 +36,7 @@ router.get("/edit", isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.post("/edit", async (req, res, next) => {
+router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
   const { username, email } = req.body;
   try {
     await User.findByIdAndUpdate(
@@ -42,6 +44,7 @@ router.post("/edit", async (req, res, next) => {
       {
         username,
         email,
+        image: req.file.path,
       },
       { new: true }
     );
