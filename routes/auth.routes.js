@@ -31,7 +31,7 @@ router.post("/signup", async (req, res, next) => {
 
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{9,}$/;
 
-  if (passwordRegex !== password) {
+  if (!passwordRegex.test(password)) {
     res.render("auth/form-signup.hbs", {
       errorMesage:
         "must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number",
@@ -40,6 +40,24 @@ router.post("/signup", async (req, res, next) => {
   }
 
   try {
+    const foundUserByName = await User.findOne({ username: username });
+
+    if (foundUserByName) {
+      res.render("auth/form-signup.hbs", {
+        errorMesage: "User with username already exists",
+      });
+      return;
+    }
+
+    const foundUserByEmail = await User.findOne({ email: email });
+
+    if (foundUserByEmail) {
+      res.render("auth/form-signup.hbs", {
+        errorMesage: "User with email already exists",
+      });
+      return;
+    }
+
     await User.create({
       email,
       password: hashPassword,
