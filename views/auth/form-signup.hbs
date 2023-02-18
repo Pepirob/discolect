@@ -8,14 +8,13 @@
   <input type="email" name="email" required />
   <br />
   <label for="password">PASSWORD: </label>
-  <input type="text" name="password" required minlength="9" maxlength="15" />
-  {{! <input
+  <input
     type="password"
     name="password"
     required
     minlength="9"
     maxlength="15"
-  /> }}
+  />
   <br />
   {{#if errorMesage}}
     <p style="color:red;">{{errorMesage}}</p>
