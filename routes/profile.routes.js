@@ -50,4 +50,19 @@ router.post("/edit", async (req, res, next) => {
     next(error);
   }
 });
+
+router.post("/delete", async (req, res, next) => {
+  try {
+    await User.findByIdAndDelete(req.session.activeUser._id);
+    req.session.destroy((error) => {
+      if (error) {
+        next(error);
+      }
+      res.redirect("/");
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
