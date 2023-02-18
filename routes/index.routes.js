@@ -15,4 +15,7 @@ router.use("/auth", authRoutes);
 const profileRoutes = require("./profile.routes.js");
 router.use("/profile", profileRoutes);
 
+const reviewRoutes = require("./review.routes");
+router.use("/review", reviewRoutes);
+
 module.exports = router;
