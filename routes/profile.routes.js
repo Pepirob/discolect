@@ -19,4 +19,14 @@ router.get("/", isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.get("/edit", isLoggedIn, (req, res, next) => {
+  const { username, email, image } = req.session.activeUser;
+
+  res.render("profile/form-edit.hbs", {
+    username,
+    email,
+    image,
+  });
+});
+
 module.exports = router;

@@ -1,0 +1,18 @@
+<h2>Edit profile</h2>
+
+<form action="/profile/edit" method="post">
+  <label for="username">USERNAME: </label>
+  <input
+    type="text"
+    name="username"
+    required
+    minlength="5"
+    minlength="15"
+    value="{{username}}"
+  />
+  <br />
+  <label for="email">EMAIL: </label>
+  <input type="email" name="email" required value="{{email}}" />
+  <br />
+  <button>UPDATE</button>
+</form>
