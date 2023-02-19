@@ -8,7 +8,7 @@ const reviewSchema = new Schema({
   content: {
     type: String,
     required: true,
-    // minLength: 500,
+    // TODO apply minLength: 500,
     maxLength: 5500,
   },
   subheading: {
