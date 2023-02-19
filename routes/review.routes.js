@@ -73,4 +73,31 @@ router.get("/:artistId/album-choose", (req, res, next) => {
     })
     .catch((error) => next(error));
 });
+
+router.get("/:albumId/create", (req, res, next) => {
+  const { albumId } = req.params;
+
+  spotifyApi
+    .getAlbum(albumId)
+    .then((response) => {
+      const artistNames = response.body.artists
+        .map((artist) => artist.name)
+        .join(", ");
+      const albumBiggestImage = response.body.images[0].url;
+      const { name, label, release_date } = response.body;
+      const releaseYear = release_date.slice(0, 4);
+
+      res.render("review/form-create.hbs", {
+        albumBiggestImage,
+        artistNames,
+        name,
+        label,
+        releaseYear,
+      });
+    })
+    .catch((error) => {
+      next(error);
+    });
+});
+
 module.exports = router;
