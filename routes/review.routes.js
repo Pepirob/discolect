@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const Review = require("../models/Review.model");
 const spotifyApi = require("../config/spotifyApi.config");
 
 // TODO EXTRACT SPOTIFY FETCHING TO SERVICES FILE
@@ -61,6 +62,7 @@ router.get("/:artistId/album-choose", (req, res, next) => {
 
 router.get("/:albumId/create", (req, res, next) => {
   const { albumId } = req.params;
+  const { image, username } = req.session.activeUser;
 
   spotifyApi
     .getAlbum(albumId)
@@ -78,11 +80,37 @@ router.get("/:albumId/create", (req, res, next) => {
         name,
         label,
         releaseYear,
+        image,
+        username,
+        albumId,
       });
     })
     .catch((error) => {
       next(error);
     });
+});
+
+router.post("/:albumId/create", async (req, res, next) => {
+  const { content, subheading, rating } = req.body;
+
+  if (!content || !subheading || !rating) {
+    res.render("review/form-create.hbs", {
+      errorMesage: "All fields must be filled",
+    });
+    return;
+  }
+
+  try {
+    await Review.create({
+      author: req.session.activeUser._id,
+      content,
+      subheading,
+      rating,
+    });
+    res.redirect("/profile");
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
