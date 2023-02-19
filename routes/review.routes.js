@@ -1,23 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const SpotifyWebApi = require("spotify-web-api-node");
+const spotifyApi = require("../config/spotifyApi.config");
 
-// TODO EXTRACT TO SERVICES
-
-const spotifyApi = new SpotifyWebApi({
-  clientId: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
-});
-
-spotifyApi
-  .clientCredentialsGrant()
-  .then((data) => {
-    spotifyApi.setAccessToken(data.body["access_token"]);
-    console;
-  })
-  .catch((error) =>
-    console.log("Something went wrong when retrieving an access token", error)
-  );
+// TODO EXTRACT SPOTIFY FETCHING TO SERVICES FILE
 
 router.get("/artist-search", (req, res, next) => {
   const fallbackImg = "https://cdn-icons-png.flaticon.com/512/33/33724.png";
