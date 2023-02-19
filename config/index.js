@@ -20,6 +20,8 @@ const path = require("path");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
+const hbs = require("hbs");
+
 // Middleware configuration
 module.exports = (app) => {
   // In development environment the app logs
@@ -30,8 +32,11 @@ module.exports = (app) => {
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
 
-  // Normalizes the path to the views folder
+  // Normalizes the paths to the views and partials
+  app.set("view engine", "hbs");
   app.set("views", path.join(__dirname, "..", "views"));
+  require("hbs").registerPartials(path.join(__dirname, "..", "views/partials"));
+
   // Sets the view engine to handlebars
   app.set("view engine", "hbs");
   // Handles access to the public folder
