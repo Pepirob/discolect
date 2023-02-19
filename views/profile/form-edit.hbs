@@ -1,8 +1,7 @@
 <h2>Edit profile</h2>
 
+<img src="{{image}}" alt="this is a picture of {{username}}" width="200px" />
 <form action="/profile/edit" method="post" enctype="multipart/form-data">
-  <img src="{{image}}" alt="this is a picture of {{username}}" width="200px" />
-  <br />
   <label for="avatar">AVATAR:</label>
   <input type="file" name="avatar" />
   <br />
