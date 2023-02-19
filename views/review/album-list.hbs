@@ -1,0 +1,11 @@
+<h1>ALBUMS FROM {{artistName}}</h1>
+
+<ul>
+    {{#each albumList}}
+    <li>
+        <img src="{{this.thumbnail.url}}" alt="A picture of {{this.name}}">
+        <h3>{{this.name}}</h3>
+        </a>
+    </li>
+    {{/each}}
+</ul>
