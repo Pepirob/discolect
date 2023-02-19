@@ -1,0 +1,11 @@
+<nav>
+    <a style="margin-right: .5rem" href="/">HOME</a>
+    {{#if isUserActive}}
+    <a style="margin-right: .5rem" href="/profile">PROFILE</a>
+    <a style="margin-right: .5rem" href="/review/artist-search">CREATE REVIEW</a>
+    <a style="color: red; margin-right: .5rem" href="/auth/logout">LOGOUT</a>
+    {{else}}
+    <a style="margin-right: .5rem" href="/auth/signup">SIGNUP</a>
+    <a style="margin-right: .5rem" href="/auth/login">LOGIN</a>
+    {{/if}}
+</nav>
