@@ -1,0 +1,20 @@
+<h1>SEARCH ARTIST</h1>
+<form action="">
+    <label for="artist">TYPE THE ALBUM ARTIST:</label>
+    <input type="text" name="artist">
+    <button>SEARCH</button>
+</form>
+<ul>
+    {{#each artistList}}
+    <li>
+        <a href="">
+            {{#if this.thumbnail.url}}
+            <img src="{{this.thumbnail.url}}" alt="A picture of {{this.name}}">
+            {{else}}
+            <img src="{{this.fallbackImg}}" alt="No pictures available" width="140">
+            {{/if}}
+            <h3>{{this.name}}</h3>
+        </a>
+    </li>
+    {{/each}}
+</ul>
