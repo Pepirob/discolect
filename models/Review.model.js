@@ -1,11 +1,14 @@
 const { Schema, model } = require("mongoose");
 
 const reviewSchema = new Schema({
-  author: {},
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   content: {
     type: String,
     required: true,
-    minLength: 500,
+    // minLength: 500,
     maxLength: 5500,
   },
   subheading: {
