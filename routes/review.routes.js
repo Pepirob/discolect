@@ -92,6 +92,7 @@ router.get("/:albumId/create", (req, res, next) => {
 
 router.post("/:albumId/create", async (req, res, next) => {
   const { content, subheading, rating } = req.body;
+  const { albumId } = req.params;
 
   if (!content || !subheading || !rating) {
     res.render("review/form-create.hbs", {
@@ -101,16 +102,50 @@ router.post("/:albumId/create", async (req, res, next) => {
   }
 
   try {
-    await Review.create({
+    const newReview = await Review.create({
       author: req.session.activeUser._id,
       content,
       subheading,
       rating,
     });
-    res.redirect("/profile");
+    res.redirect(`/review/${albumId}/${newReview._id}`);
   } catch (error) {
     next(error);
   }
+});
+
+router.get("/:albumId/:reviewId", (req, res, next) => {
+  const { albumId, reviewId } = req.params;
+
+  spotifyApi
+    .getAlbum(albumId)
+    .then((response) => {
+      const albumBiggestImage = response.body.images[0].url;
+      const { name } = response.body;
+
+      Review.findById(reviewId)
+        .populate("author")
+        .then((response) => {
+          console.log(response);
+          const { blogName, image } = response.author;
+          const { content, subheading, rating } = response;
+
+          res.render("review/view.hbs", {
+            image,
+            blogName,
+            name,
+            rating,
+            albumBiggestImage,
+            subheading,
+            content,
+            albumId,
+            reviewId,
+          });
+        });
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
 module.exports = router;
