@@ -126,7 +126,6 @@ router.get("/:albumId/:reviewId", (req, res, next) => {
       Review.findById(reviewId)
         .populate("author")
         .then((response) => {
-          console.log(response);
           const { blogName, image } = response.author;
           const { content, subheading, rating } = response;
 
