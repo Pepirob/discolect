@@ -64,7 +64,7 @@ router.get("/:artistId/album-choose", (req, res, next) => {
 router.get("/:albumId/create", (req, res, next) => {
   const { albumId } = req.params;
   const { _id } = req.session.activeUser;
-  console.log(req.session.activeUser);
+
   spotifyApi
     .getAlbum(albumId)
     .then((response) => {
@@ -194,6 +194,7 @@ router.get("/:albumId/:reviewId/edit", (req, res, next) => {
 
 router.post("/:albumId/:reviewId/edit", async (req, res, next) => {
   const { albumId, reviewId } = req.params;
+
   try {
     const newReview = await Review.findByIdAndUpdate(
       reviewId,
@@ -212,6 +213,7 @@ router.post("/:albumId/:reviewId/edit", async (req, res, next) => {
 
 router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
   const { reviewId } = req.params;
+
   try {
     await Review.findByIdAndDelete(reviewId);
     res.redirect("/profile");
