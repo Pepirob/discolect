@@ -11,7 +11,7 @@ router.get("/", async (req, res, next) => {
   try {
     const latestEntries = await Review.find()
       .select({ albumName: 1, albumImg: 1, subheading: 1 })
-      .sort({ _id: -1 })
+      .sort({ updatedAt: 1 })
       .limit(3);
 
     res.render("index.hbs", { latestEntries });
