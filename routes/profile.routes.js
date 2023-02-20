@@ -41,7 +41,7 @@ router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
   const { username, email, existingAvatar } = req.body;
 
   if (!username || !email) {
-    res.render("auth/form-signup.hbs", {
+    res.render("profile/form-edit.hbs", {
       errorMessage: "All fields must be filled",
     });
     return;
@@ -56,22 +56,35 @@ router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
   }
 
   try {
-    const foundUserByName = await User.findOne({ username: username });
+    const currentUser = await User.findById(req.session.activeUser._id, {
+      username: 1,
+      name: 1,
+    });
 
-    if (foundUserByName) {
-      res.render("auth/form-signup.hbs", {
-        errorMessage: "User with username already exists",
-      });
-      return;
+    console.log(currentUser.username);
+
+    console.log(currentUser.username);
+
+    if (username !== currentUser.username) {
+      const foundUserByName = await User.findOne({ username: username });
+
+      if (foundUserByName) {
+        res.render("profile/form-edit.hbs", {
+          errorMessage: "User with username already exists",
+        });
+        return;
+      }
     }
 
-    const foundUserByEmail = await User.findOne({ email: email });
+    if (email !== currentUser.email) {
+      const foundUserByEmail = await User.findOne({ email: email });
 
-    if (foundUserByEmail) {
-      res.render("auth/form-signup.hbs", {
-        errorMessage: "User with email already exists",
-      });
-      return;
+      if (foundUserByEmail) {
+        res.render("profile/form-edit.hbs", {
+          errorMessage: "User with email already exists",
+        });
+        return;
+      }
     }
 
     await User.findByIdAndUpdate(
