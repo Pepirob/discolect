@@ -37,17 +37,25 @@ router.get("/edit", isLoggedIn, async (req, res, next) => {
 });
 
 router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
-  const { username, email } = req.body;
+  const { username, email, existingAvatar } = req.body;
+
+  let imageUrl;
+  if (req.file) {
+    imageUrl = req.file.path;
+  } else {
+    imageUrl = existingAvatar;
+  }
   try {
     await User.findByIdAndUpdate(
       req.session.activeUser._id,
       {
         username,
         email,
-        image: req.file.path,
+        image: imageUrl,
       },
       { new: true }
     );
+
     res.redirect("/profile");
   } catch (error) {
     next(error);
