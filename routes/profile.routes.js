@@ -23,6 +23,7 @@ router.get("/", isLoggedIn, async (req, res, next) => {
 
 router.get("/edit", isLoggedIn, async (req, res, next) => {
   const { _id } = req.session.activeUser;
+  const { errorMessage } = req.query;
 
   try {
     const foundUser = await User.findById(_id);
@@ -31,6 +32,7 @@ router.get("/edit", isLoggedIn, async (req, res, next) => {
       username: foundUser.username,
       email: foundUser.email,
       image: foundUser.image,
+      errorMessage,
     });
   } catch (error) {
     next(error);
@@ -61,17 +63,14 @@ router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
       name: 1,
     });
 
-    console.log(currentUser.username);
-
-    console.log(currentUser.username);
-
     if (username !== currentUser.username) {
       const foundUserByName = await User.findOne({ username: username });
 
       if (foundUserByName) {
-        res.render("profile/form-edit.hbs", {
-          errorMessage: "User with username already exists",
-        });
+        const errorMessage = "User with username already exists";
+
+        res.redirect(`/profile/edit?errorMessage=${errorMessage}`);
+
         return;
       }
     }
@@ -80,9 +79,10 @@ router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
       const foundUserByEmail = await User.findOne({ email: email });
 
       if (foundUserByEmail) {
-        res.render("profile/form-edit.hbs", {
-          errorMessage: "User with email already exists",
-        });
+        const errorMessage = "User with email already exists";
+
+        res.redirect(`/profile/edit?errorMessage=${errorMessage}`);
+
         return;
       }
     }
