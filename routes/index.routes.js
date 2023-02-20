@@ -10,7 +10,7 @@ router.use(updateLocals);
 router.get("/", async (req, res, next) => {
   try {
     const latestEntries = await Review.find()
-      .select({ albumName: 1, albumImg: 1, subheading: 1 })
+      .select({ albumName: 1, albumImg: 1, subheading: 1, spotifyId: 1 })
       .sort({ updatedAt: -1 })
       .limit(3);
 
