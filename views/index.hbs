@@ -1,6 +1,19 @@
 <header>
     {{>navigation}}
+    <form action="/album/search" method="get">
+    <label for="album">FIND ALBUM</label>
+    <input type="text" name="album">
+    <button>SEARCH</button>
+    </form>
 </header>
 <main>
     <h1>{{appTitle}} \m/</h1>
+    <h3>Latest Entries</h3>
+    {{#each latestEntries}}
+    <div>
+    <img src="{{this.albumImg}}" alt="image from the album {{this.albumName}}" width="150">
+    <h2>{{this.albumName}}</h2>
+    <p>{{this.subheading}}</p>
+    </div>
+    {{/each}}
 </main>

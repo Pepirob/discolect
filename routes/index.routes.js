@@ -2,10 +2,22 @@ const express = require("express");
 const router = express.Router();
 const { updateLocals } = require("../middleware/auth");
 
+const Review = require("../models/Review.model");
+
 router.use(updateLocals);
 
 /* GET home page */
-router.get("/", (req, res, next) => {
+router.get("/", async (req, res, next) => {
+  try {
+    const latestEntries = await Review.find()
+      .select({ albumName: 1, albumImg: 1, subheading: 1 })
+      .sort({ _id: -1 })
+      .limit(3);
+
+    res.render("index.hbs", { latestEntries });
+  } catch (error) {
+    next(error);
+  }
   res.render("index");
 });
 
