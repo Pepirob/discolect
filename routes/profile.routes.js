@@ -70,7 +70,7 @@ router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
   try {
     const currentUser = await User.findById(req.session.activeUser._id, {
       username: 1,
-      name: 1,
+      email: 1,
     });
 
     if (username !== currentUser.username) {
