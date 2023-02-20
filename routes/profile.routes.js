@@ -23,6 +23,7 @@ router.get("/", isLoggedIn, async (req, res, next) => {
 
 router.get("/edit", isLoggedIn, async (req, res, next) => {
   const { _id } = req.session.activeUser;
+
   try {
     const foundUser = await User.findById(_id);
 
@@ -39,13 +40,40 @@ router.get("/edit", isLoggedIn, async (req, res, next) => {
 router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
   const { username, email, existingAvatar } = req.body;
 
+  if (!username || !email) {
+    res.render("auth/form-signup.hbs", {
+      errorMesage: "All fields must be filled",
+    });
+    return;
+  }
+
   let imageUrl;
+
   if (req.file) {
     imageUrl = req.file.path;
   } else {
     imageUrl = existingAvatar;
   }
+
   try {
+    const foundUserByName = await User.findOne({ username: username });
+
+    if (foundUserByName) {
+      res.render("auth/form-signup.hbs", {
+        errorMesage: "User with username already exists",
+      });
+      return;
+    }
+
+    const foundUserByEmail = await User.findOne({ email: email });
+
+    if (foundUserByEmail) {
+      res.render("auth/form-signup.hbs", {
+        errorMesage: "User with email already exists",
+      });
+      return;
+    }
+
     await User.findByIdAndUpdate(
       req.session.activeUser._id,
       {
