@@ -8,9 +8,17 @@
   <form action="/profile/edit" method="post" enctype="multipart/form-data">
     <label for="avatar">AVATAR:</label>
     <input type="file" name="avatar" />
+    <input type="text" name="existingAvatar" hidden value="{{image}}" />
     <br />
     <label for="username">USERNAME: </label>
-    <input type="text" name="username" required minlength="5" minlength="15" value="{{username}}" />
+    <input
+      type="text"
+      name="username"
+      required
+      minlength="5"
+      minlength="15"
+      value="{{username}}"
+    />
     <br />
     <label for="email">EMAIL: </label>
     <input type="email" name="email" required value="{{email}}" />
