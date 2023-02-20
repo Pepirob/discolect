@@ -64,6 +64,7 @@ router.get("/:artistId/album-choose", (req, res, next) => {
 router.get("/:albumId/create", (req, res, next) => {
   const { albumId } = req.params;
   const { _id } = req.session.activeUser;
+  const { errorMessage } = req.query;
 
   spotifyApi
     .getAlbum(albumId)
@@ -76,7 +77,6 @@ router.get("/:albumId/create", (req, res, next) => {
       const releaseYear = release_date.slice(0, 4);
 
       User.findById(_id).then((response) => {
-        console.log(response);
         res.render("review/form-create.hbs", {
           albumBiggestImage,
           artistNames,
@@ -85,6 +85,7 @@ router.get("/:albumId/create", (req, res, next) => {
           releaseYear,
           albumId,
           image: response.image,
+          errorMessage,
         });
       });
     })
@@ -99,18 +100,37 @@ router.post("/:albumId/create", async (req, res, next) => {
 
   if (!content || !subheading || !rating) {
     res.render("review/form-create.hbs", {
-      errorMesage: "All fields must be filled",
+      errorMessage: "All fields must be filled",
     });
     return;
   }
 
   try {
+    const albumData = await spotifyApi.getAlbum(albumId);
+
+    const {
+      name,
+      images: [bigImage, ...rest],
+    } = albumData.body;
+
+    const foundAlbum = await Review.findOne({
+      author: req.session.activeUser._id,
+      albumName: name,
+    });
+
+    if (foundAlbum) {
+      const errorMessage = "You cannot review the same album twice";
+
+      res.redirect(`/review/${albumId}/create?errorMessage=${errorMessage}`);
+    }
+
     const newReview = await Review.create({
       author: req.session.activeUser._id,
       content,
       subheading,
       rating,
-      spotifyID: albumId,
+      albumName: name,
+      albumImg: bigImage.url,
     });
 
     res.redirect(`/review/${albumId}/${newReview._id}`);

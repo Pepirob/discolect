@@ -23,6 +23,7 @@ router.get("/", isLoggedIn, async (req, res, next) => {
 
 router.get("/edit", isLoggedIn, async (req, res, next) => {
   const { _id } = req.session.activeUser;
+  const { errorMessage } = req.query;
 
   try {
     const foundUser = await User.findById(_id);
@@ -31,6 +32,7 @@ router.get("/edit", isLoggedIn, async (req, res, next) => {
       username: foundUser.username,
       email: foundUser.email,
       image: foundUser.image,
+      errorMessage,
     });
   } catch (error) {
     next(error);
@@ -41,8 +43,8 @@ router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
   const { username, email, existingAvatar } = req.body;
 
   if (!username || !email) {
-    res.render("auth/form-signup.hbs", {
-      errorMesage: "All fields must be filled",
+    res.render("profile/form-edit.hbs", {
+      errorMessage: "All fields must be filled",
     });
     return;
   }
@@ -56,22 +58,33 @@ router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
   }
 
   try {
-    const foundUserByName = await User.findOne({ username: username });
+    const currentUser = await User.findById(req.session.activeUser._id, {
+      username: 1,
+      name: 1,
+    });
 
-    if (foundUserByName) {
-      res.render("auth/form-signup.hbs", {
-        errorMesage: "User with username already exists",
-      });
-      return;
+    if (username !== currentUser.username) {
+      const foundUserByName = await User.findOne({ username: username });
+
+      if (foundUserByName) {
+        const errorMessage = "User with username already exists";
+
+        res.redirect(`/profile/edit?errorMessage=${errorMessage}`);
+
+        return;
+      }
     }
 
-    const foundUserByEmail = await User.findOne({ email: email });
+    if (email !== currentUser.email) {
+      const foundUserByEmail = await User.findOne({ email: email });
 
-    if (foundUserByEmail) {
-      res.render("auth/form-signup.hbs", {
-        errorMesage: "User with email already exists",
-      });
-      return;
+      if (foundUserByEmail) {
+        const errorMessage = "User with email already exists";
+
+        res.redirect(`/profile/edit?errorMessage=${errorMessage}`);
+
+        return;
+      }
     }
 
     await User.findByIdAndUpdate(
