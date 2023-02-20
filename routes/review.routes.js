@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Review = require("../models/Review.model");
+const User = require("../models/User.model");
 const spotifyApi = require("../config/spotifyApi.config");
 
 // TODO EXTRACT SPOTIFY FETCHING TO SERVICES FILE
@@ -62,7 +63,7 @@ router.get("/:artistId/album-choose", (req, res, next) => {
 
 router.get("/:albumId/create", (req, res, next) => {
   const { albumId } = req.params;
-  const { image, username } = req.session.activeUser;
+  const { _id } = req.session.activeUser;
 
   spotifyApi
     .getAlbum(albumId)
@@ -74,15 +75,17 @@ router.get("/:albumId/create", (req, res, next) => {
       const { name, label, release_date } = response.body;
       const releaseYear = release_date.slice(0, 4);
 
-      res.render("review/form-create.hbs", {
-        albumBiggestImage,
-        artistNames,
-        name,
-        label,
-        releaseYear,
-        image,
-        username,
-        albumId,
+      User.findById(_id).then((response) => {
+        console.log(response);
+        res.render("review/form-create.hbs", {
+          albumBiggestImage,
+          artistNames,
+          name,
+          label,
+          releaseYear,
+          albumId,
+          image: response.image,
+        });
       });
     })
     .catch((error) => {
@@ -147,6 +150,76 @@ router.get("/:albumId/:reviewId", (req, res, next) => {
     .catch((error) => {
       next(error);
     });
+});
+
+router.get("/:albumId/:reviewId/edit", (req, res, next) => {
+  const { albumId, reviewId } = req.params;
+
+  spotifyApi
+    .getAlbum(albumId)
+    .then((response) => {
+      const artistNames = response.body.artists
+        .map((artist) => artist.name)
+        .join(", ");
+      const albumBiggestImage = response.body.images[0].url;
+      const { name, label, release_date } = response.body;
+      const releaseYear = release_date.slice(0, 4);
+
+      Review.findById(reviewId)
+        .populate("author")
+        .then((response) => {
+          const { blogName, image } = response.author;
+          const { content, subheading, rating } = response;
+
+          res.render("review/form-edit.hbs", {
+            artistNames,
+            label,
+            releaseYear,
+            image,
+            blogName,
+            name,
+            rating,
+            albumBiggestImage,
+            subheading,
+            content,
+            albumId,
+            reviewId,
+          });
+        });
+    })
+    .catch((error) => {
+      next(error);
+    });
+});
+
+router.post("/:albumId/:reviewId/edit", async (req, res, next) => {
+  const { albumId, reviewId } = req.params;
+
+  try {
+    const newReview = await Review.findByIdAndUpdate(
+      reviewId,
+      {
+        rating: req.body.rating,
+        subheading: req.body.subheading,
+        content: req.body.content,
+      },
+      { new: true }
+    );
+    res.redirect(`/review/${albumId}/${newReview._id}`);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
+  const { reviewId } = req.params;
+
+  try {
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect("/profile");
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;

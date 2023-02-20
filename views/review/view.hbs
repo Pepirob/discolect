@@ -11,7 +11,7 @@
     <h3>by {{blogName}}</h3>
     {{#if isUserActive}}
     <a href="/review/{{albumId}}/{{reviewId}}/edit">EDIT</a>
-    <form action="/review/{{albumId}}/{{reviewId}}/delete">
+    <form action="/review/{{albumId}}/{{reviewId}}/delete" method="post">
       <button>DELETE REVIEW</button>
     </form>
     {{/if}}
