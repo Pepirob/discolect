@@ -64,6 +64,7 @@ router.get("/:artistId/album-choose", (req, res, next) => {
 router.get("/:albumId/create", (req, res, next) => {
   const { albumId } = req.params;
   const { _id } = req.session.activeUser;
+  const { errorMessage } = req.query;
 
   spotifyApi
     .getAlbum(albumId)
@@ -84,6 +85,7 @@ router.get("/:albumId/create", (req, res, next) => {
           releaseYear,
           albumId,
           image: response.image,
+          errorMessage,
         });
       });
     })
@@ -110,6 +112,26 @@ router.post("/:albumId/create", async (req, res, next) => {
       name,
       images: [bigImage, ...rest],
     } = albumData.body;
+
+    const foundAlbum = await Review.findOne({
+      author: req.session.activeUser._id,
+      albumName: name,
+    });
+
+    if (foundAlbum) {
+      res.render("review/form-create.hbs", {
+        errorMesage: "You cannot review the same album twice",
+      });
+
+      return;
+
+      const errorMesage = "You cannot review the same album twice";
+
+      res.redirect(
+        `/review/${albumId}/create?errorMessage=` +
+          encodedURIComponent(errorMesage)
+      );
+    }
 
     const newReview = await Review.create({
       author: req.session.activeUser._id,
