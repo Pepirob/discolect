@@ -107,7 +107,9 @@ router.post("/:albumId/create", async (req, res, next) => {
       content,
       subheading,
       rating,
+      spotifyID: albumId,
     });
+
     res.redirect(`/review/${albumId}/${newReview._id}`);
   } catch (error) {
     next(error);
