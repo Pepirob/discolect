@@ -100,7 +100,7 @@ router.post("/:albumId/create", async (req, res, next) => {
 
   if (!content || !subheading || !rating) {
     res.render("review/form-create.hbs", {
-      errorMesage: "All fields must be filled",
+      errorMessage: "All fields must be filled",
     });
     return;
   }
@@ -119,18 +119,9 @@ router.post("/:albumId/create", async (req, res, next) => {
     });
 
     if (foundAlbum) {
-      res.render("review/form-create.hbs", {
-        errorMesage: "You cannot review the same album twice",
-      });
+      const errorMessage = "You cannot review the same album twice";
 
-      return;
-
-      const errorMesage = "You cannot review the same album twice";
-
-      res.redirect(
-        `/review/${albumId}/create?errorMessage=` +
-          encodedURIComponent(errorMesage)
-      );
+      res.redirect(`/review/${albumId}/create?errorMessage=${errorMessage}`);
     }
 
     const newReview = await Review.create({

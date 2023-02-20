@@ -16,14 +16,14 @@ router.post("/signup", async (req, res, next) => {
 
   if (!username || !email || !password) {
     res.render("auth/form-signup.hbs", {
-      errorMesage: "All fields must be filled",
+      errorMessage: "All fields must be filled",
     });
     return;
   }
 
   if (password.length < 9 || password.length > 15) {
     res.render("auth/form-signup.hbs", {
-      errorMesage:
+      errorMessage:
         "password must containt at least 9 characters and no more than 15",
     });
     return;
@@ -33,7 +33,7 @@ router.post("/signup", async (req, res, next) => {
 
   if (!passwordRegex.test(password)) {
     res.render("auth/form-signup.hbs", {
-      errorMesage:
+      errorMessage:
         "must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number",
     });
     return;
@@ -44,7 +44,7 @@ router.post("/signup", async (req, res, next) => {
 
     if (foundUserByName) {
       res.render("auth/form-signup.hbs", {
-        errorMesage: "User with username already exists",
+        errorMessage: "User with username already exists",
       });
       return;
     }
@@ -53,7 +53,7 @@ router.post("/signup", async (req, res, next) => {
 
     if (foundUserByEmail) {
       res.render("auth/form-signup.hbs", {
-        errorMesage: "User with email already exists",
+        errorMessage: "User with email already exists",
       });
       return;
     }
@@ -83,7 +83,7 @@ router.post("/login", async (req, res, next) => {
 
     if (!foundUser) {
       res.render("auth/form-login.hbs", {
-        errorMesage: "User with username doesn't exists",
+        errorMessage: "User with username doesn't exists",
       });
       return;
     }
@@ -95,7 +95,7 @@ router.post("/login", async (req, res, next) => {
 
     if (!isPasswordCorrect) {
       res.render("auth/form-login.hbs", {
-        errorMesage: "Invalid password",
+        errorMessage: "Invalid password",
       });
       return;
     }

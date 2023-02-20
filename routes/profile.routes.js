@@ -42,7 +42,7 @@ router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
 
   if (!username || !email) {
     res.render("auth/form-signup.hbs", {
-      errorMesage: "All fields must be filled",
+      errorMessage: "All fields must be filled",
     });
     return;
   }
@@ -60,7 +60,7 @@ router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
 
     if (foundUserByName) {
       res.render("auth/form-signup.hbs", {
-        errorMesage: "User with username already exists",
+        errorMessage: "User with username already exists",
       });
       return;
     }
@@ -69,7 +69,7 @@ router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
 
     if (foundUserByEmail) {
       res.render("auth/form-signup.hbs", {
-        errorMesage: "User with email already exists",
+        errorMessage: "User with email already exists",
       });
       return;
     }
