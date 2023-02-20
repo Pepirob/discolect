@@ -76,7 +76,6 @@ router.get("/:albumId/create", (req, res, next) => {
       const releaseYear = release_date.slice(0, 4);
 
       User.findById(_id).then((response) => {
-        console.log(response);
         res.render("review/form-create.hbs", {
           albumBiggestImage,
           artistNames,
