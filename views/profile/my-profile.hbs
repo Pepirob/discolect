@@ -7,8 +7,10 @@
     <ul>
       {{#each userReviews}}
       <li>
-        <img src="{{this.albumImg}}" alt="Cover art from {{this.albumName}}" width="150">
-        <h3>{{this.albumName}}</h3>
+        <a href="/review/{{this.spotifyId}}/{{this._id}}">
+          <img src="{{this.albumImg}}" alt="Cover art from {{this.albumName}}" width="150">
+          <h3>{{this.albumName}}</h3>
+        </a>
       </li>
       {{/each}}
     </ul>

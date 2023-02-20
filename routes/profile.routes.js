@@ -15,7 +15,7 @@ router.get("/", isLoggedIn, async (req, res, next) => {
 
     const userReviews = await Review.find(
       { author: userId },
-      { albumName: 1, albumImg: 1 }
+      { spotifyId: 1, albumName: 1, albumImg: 1 }
     );
 
     const date = new Date(userData.createdAt);

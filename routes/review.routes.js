@@ -131,6 +131,7 @@ router.post("/:albumId/create", async (req, res, next) => {
       content,
       subheading,
       rating,
+      spotifyId: albumId,
       albumName: name,
       albumImg: bigImage.url,
     });
