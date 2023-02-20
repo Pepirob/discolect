@@ -20,9 +20,13 @@ const reviewSchema = new Schema({
     type: Number,
     enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
   },
-  spotifyID: {
+  albumName: {
     type: String,
     required: true,
+  },
+  albumImg: {
+    type: String,
+    default: "https://cdn-icons-png.flaticon.com/512/33/33724.png",
   },
 });
 

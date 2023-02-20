@@ -105,12 +105,20 @@ router.post("/:albumId/create", async (req, res, next) => {
   }
 
   try {
+    const albumData = await spotifyApi.getAlbum(albumId);
+
+    const {
+      name,
+      images: [bigImage, ...rest],
+    } = albumData.body;
+
     const newReview = await Review.create({
       author: req.session.activeUser._id,
       content,
       subheading,
       rating,
-      spotifyID: albumId,
+      albumName: name,
+      albumImg: bigImage.url,
     });
 
     res.redirect(`/review/${albumId}/${newReview._id}`);
