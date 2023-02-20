@@ -122,6 +122,7 @@ router.post("/:albumId/create", async (req, res, next) => {
       const errorMessage = "You cannot review the same album twice";
 
       res.redirect(`/review/${albumId}/create?errorMessage=${errorMessage}`);
+      return;
     }
 
     const newReview = await Review.create({
