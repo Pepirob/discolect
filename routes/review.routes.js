@@ -110,9 +110,14 @@ router.post("/:albumId/create", async (req, res, next) => {
     const albumData = await spotifyApi.getAlbum(albumId);
 
     const {
+      artists,
       name,
       images: [bigImage, ...rest],
     } = albumData.body;
+
+    const artistNames = artists.map((artist) => artist.name).join(", ");
+
+    console.log(albumData.body);
 
     const foundAlbum = await Review.findOne({
       author: req.session.activeUser._id,
@@ -135,6 +140,7 @@ router.post("/:albumId/create", async (req, res, next) => {
       spotifyId: albumId,
       albumName: name,
       albumImg: bigImage.url,
+      artistNames,
     });
 
     res.redirect(`/review/${albumId}/${newReview._id}`);
