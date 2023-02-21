@@ -1,0 +1,29 @@
+<header>
+  <a href="/">HOME</a>
+</header>
+
+<main>
+  <h1>SIGNUP</h1>
+
+  <form action="/auth/signup" method="post">
+    <label for="username">USERNAME: </label>
+    <input type="text" name="username" required minlength="5" minlength="15" />
+    <br />
+    <label for="email">EMAIL: </label>
+    <input type="email" name="email" required />
+    <br />
+    <label for="password">PASSWORD: </label>
+    <input
+      type="password"
+      name="password"
+      required
+      minlength="9"
+      maxlength="15"
+    />
+    <br />
+    {{#if errorMessage}}
+      <p style="color:red;">{{errorMessage}}</p>
+    {{/if}}
+    <button>SUBMIT</button>
+  </form>
+</main>

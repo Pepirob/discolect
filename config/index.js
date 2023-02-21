@@ -17,6 +17,11 @@ const favicon = require("serve-favicon");
 // https://www.npmjs.com/package/path
 const path = require("path");
 
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+
+const hbs = require("hbs");
+
 // Middleware configuration
 module.exports = (app) => {
   // In development environment the app logs
@@ -27,13 +32,34 @@ module.exports = (app) => {
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
 
-  // Normalizes the path to the views folder
+  // Normalizes the paths to the views and partials
+  app.set("view engine", "hbs");
   app.set("views", path.join(__dirname, "..", "views"));
+  require("hbs").registerPartials(path.join(__dirname, "..", "views/partials"));
+
   // Sets the view engine to handlebars
   app.set("view engine", "hbs");
   // Handles access to the public folder
   app.use(express.static(path.join(__dirname, "..", "public")));
 
   // Handles access to the favicon
-  app.use(favicon(path.join(__dirname, "..", "public", "images", "favicon.ico")));
+  app.use(
+    favicon(path.join(__dirname, "..", "public", "images", "favicon.ico"))
+  );
+
+  app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+      },
+      store: MongoStore.create({
+        mongoUrl:
+          process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/discolect",
+        ttl: 60 * 60 * 24 * 7,
+      }),
+    })
+  );
 };

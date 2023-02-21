@@ -1,0 +1,35 @@
+<header>
+  <a href="/profile">BACK TO PROFILE</a>
+</header>
+<main>
+  <h1>Edit profile</h1>
+
+  <img src="{{image}}" alt="this is a picture of {{username}}" width="200px" />
+  <form action="/profile/edit" method="post" enctype="multipart/form-data">
+    <label for="avatar">AVATAR:</label>
+    <input type="file" name="avatar" />
+    <input type="text" name="existingAvatar" hidden value="{{image}}" />
+    <br />
+    <label for="username">USERNAME: </label>
+    <input
+      type="text"
+      name="username"
+      required
+      minlength="5"
+      minlength="15"
+      value="{{username}}"
+    />
+    <br />
+    <label for="email">EMAIL: </label>
+    <input type="email" name="email" required value="{{email}}" />
+    <br />
+    {{#if errorMessage}}
+      <p style="color:red;">{{errorMessage}}</p>
+    {{/if}}
+    <button>UPDATE</button>
+  </form>
+
+  <form action="/profile/delete" method="post">
+    <button>DELETE</button>
+  </form>
+</main>
