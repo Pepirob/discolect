@@ -20,11 +20,12 @@ const updateUserActiveLocal = (req, res, next) => {
 const updateIsOwnerLocal = async (req, res, next) => {
   try {
     const foundReview = await Review.findById(req.params.reviewId);
+    const foundReviewId = foundReview.author.toString();
 
-    console.log("active user", req.session.activeUser._id);
-    console.log("author", foundReview.author._id);
-
-    if (foundReview.author === req.session.activeUser._id) {
+    if (
+      res.locals.isUserActive &&
+      foundReviewId === req.session.activeUser._id
+    ) {
       res.locals.isUserOwner = true;
     } else {
       res.locals.isUserOwner = false;
