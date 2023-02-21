@@ -247,7 +247,17 @@ router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
 });
 
 router.get("/search", async (req, res, next) => {
+  const { reviewSearch } = req.query;
+
+  const searchRegExp = new RegExp(`${reviewSearch}`, "i");
+
+  Review.find({ albumName: { $regex: searchRegExp } });
+
   try {
+    const foundReviews = await Review.find({
+      albumName: { $regex: searchRegExp },
+    }).sort({ updatedAt: -1 });
+
     res.render("review/review-search-list.hbs");
   } catch (error) {
     next();
