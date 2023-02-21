@@ -4,6 +4,7 @@ const Review = require("../models/Review.model");
 const User = require("../models/User.model");
 const { updateIsOwnerLocal } = require("../middleware/auth");
 const spotifyApi = require("../config/spotifyApi.config");
+const { joinProperties } = require("../utils");
 
 // TODO EXTRACT SPOTIFY FETCHING TO SERVICES FILE
 
@@ -70,9 +71,8 @@ router.get("/:albumId/create", (req, res, next) => {
   spotifyApi
     .getAlbum(albumId)
     .then((response) => {
-      const artistNames = response.body.artists
-        .map((artist) => artist.name)
-        .join(", ");
+      const artistNames = joinProperties(response.body.artists, "name");
+
       const albumBiggestImage = response.body.images[0].url;
       const { name, label, release_date } = response.body;
       const releaseYear = release_date.slice(0, 4);
@@ -188,9 +188,7 @@ router.get("/:albumId/:reviewId/edit", (req, res, next) => {
   spotifyApi
     .getAlbum(albumId)
     .then((response) => {
-      const artistNames = response.body.artists
-        .map((artist) => artist.name)
-        .join(", ");
+      const artistNames = joinProperties(response.body.artists, "name");
       const albumBiggestImage = response.body.images[0].url;
       const { name, label, release_date } = response.body;
       const releaseYear = release_date.slice(0, 4);
