@@ -18,7 +18,6 @@ router.get("/", async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-  res.render("index");
 });
 
 const authRoutes = require("./auth.routes");
