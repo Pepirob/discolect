@@ -246,4 +246,12 @@ router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
   }
 });
 
+router.get("/search", async (req, res, next) => {
+  try {
+    res.render("review/review-search-list.hbs");
+  } catch (error) {
+    next();
+  }
+});
+
 module.exports = router;
