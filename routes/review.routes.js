@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Review = require("../models/Review.model");
 const User = require("../models/User.model");
+const { updateIsOwnerLocal } = require("../middleware/auth");
 const spotifyApi = require("../config/spotifyApi.config");
 
 // TODO EXTRACT SPOTIFY FETCHING TO SERVICES FILE
@@ -142,7 +143,7 @@ router.post("/:albumId/create", async (req, res, next) => {
   }
 });
 
-router.get("/:albumId/:reviewId", (req, res, next) => {
+router.get("/:albumId/:reviewId", updateIsOwnerLocal, (req, res, next) => {
   const { albumId, reviewId } = req.params;
 
   spotifyApi
