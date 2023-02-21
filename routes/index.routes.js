@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { updateLocals } = require("../middleware/auth");
+const { updateUserActiveLocal } = require("../middleware/auth");
 
 const Review = require("../models/Review.model");
 
-router.use(updateLocals);
+router.use(updateUserActiveLocal);
 
 /* GET home page */
 router.get("/", async (req, res, next) => {
