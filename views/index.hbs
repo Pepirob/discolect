@@ -1,19 +1,18 @@
 <header>
-    {{>navigation}}
-    <form action="/album/search" method="get">
-    <label for="album">FIND ALBUM</label>
-    <input type="text" name="album">
-    <button>SEARCH</button>
-    </form>
+  {{>navigation}}
 </header>
 <main>
-    <h1>{{appTitle}} \m/</h1>
-    <h3>Latest Entries</h3>
+  <h1>{{appTitle}} \m/</h1>
+  <h2>Latest Entries</h2>
+  <ul>
     {{#each latestEntries}}
-    <div>
-    <img src="{{this.albumImg}}" alt="image from the album {{this.albumName}}" width="150">
-    <h2>{{this.albumName}}</h2>
-    <p>{{this.subheading}}</p>
-    </div>
+    <li>
+      <a href="/review/{{this.spotifyId}}/{{this._id}}">
+        <img src="{{this.albumImg}}" alt="Cover {{this.albumName}}" width="150">
+        <h3>{{this.albumName}}</h3>
+        <h4>{{this.subheading}}</h4>
+      </a>
+    </li>
     {{/each}}
+  </ul>
 </main>

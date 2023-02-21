@@ -122,6 +122,7 @@ router.post("/:albumId/create", async (req, res, next) => {
       const errorMessage = "You cannot review the same album twice";
 
       res.redirect(`/review/${albumId}/create?errorMessage=${errorMessage}`);
+
       return;
     }
 
@@ -130,6 +131,7 @@ router.post("/:albumId/create", async (req, res, next) => {
       content,
       subheading,
       rating,
+      spotifyId: albumId,
       albumName: name,
       albumImg: bigImage.url,
     });

@@ -2,8 +2,18 @@
   {{>navigation}}
 </header>
 <main>
-  <section>
+  <section style="float: right">
     <h1>{{userData.username}}</h1>
+    <ul>
+      {{#each userReviews}}
+      <li>
+        <a href="/review/{{this.spotifyId}}/{{this._id}}">
+          <img src="{{this.albumImg}}" alt="Cover art from {{this.albumName}}" width="150">
+          <h3>{{this.albumName}}</h3>
+        </a>
+      </li>
+      {{/each}}
+    </ul>
   </section>
   <aside>
     <img src="{{userData.image}}" alt="this is a picture of {{userData.username}}" width="300" />

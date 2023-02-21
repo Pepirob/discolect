@@ -4,17 +4,27 @@ const router = express.Router();
 const fileUploader = require("../config/cloudinary.config");
 
 const { isLoggedIn } = require("../middleware/auth");
+const Review = require("../models/Review.model");
 const User = require("../models/User.model");
 
 router.get("/", isLoggedIn, async (req, res, next) => {
+  const userId = req.session.activeUser._id;
+
   try {
-    const userData = await User.findById(req.session.activeUser._id);
+    const userData = await User.findById(userId);
+
+    const userReviews = await Review.find(
+      { author: userId },
+      { spotifyId: 1, albumName: 1, albumImg: 1 }
+    );
+
     const date = new Date(userData.createdAt);
     const registerDate = date.toLocaleDateString();
 
     res.render("profile/my-profile.hbs", {
       registerDate,
       userData,
+      userReviews,
     });
   } catch (error) {
     next(error);
