@@ -255,14 +255,13 @@ router.get("/search", async (req, res, next) => {
 
   const searchRegExp = new RegExp(`${reviewSearch}`, "i");
 
-  Review.find({ albumName: { $regex: searchRegExp } });
-
   try {
     const foundReviews = await Review.find({
-      albumName: { $regex: searchRegExp },
+      $or: [
+        { albumName: { $regex: searchRegExp } },
+        { artistNames: { $regex: searchRegExp } },
+      ],
     }).sort({ updatedAt: -1 });
-
-    res.render("review/review-search-list.hbs");
   } catch (error) {
     next();
   }
