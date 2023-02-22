@@ -17,7 +17,7 @@ const updateUserActiveLocal = (req, res, next) => {
   next();
 };
 
-const updateIsOwnerLocal = async (req, res, next) => {
+const updateIsReviewOwnerLocal = async (req, res, next) => {
   try {
     const foundReview = await Review.findById(req.params.reviewId);
     const foundReviewId = foundReview.author.toString();
@@ -26,9 +26,9 @@ const updateIsOwnerLocal = async (req, res, next) => {
       res.locals.isUserActive &&
       foundReviewId === req.session.activeUser._id
     ) {
-      res.locals.isUserOwner = true;
+      res.locals.isReviewOwner = true;
     } else {
-      res.locals.isUserOwner = false;
+      res.locals.isReviewOwner = false;
     }
 
     next();
@@ -36,5 +36,20 @@ const updateIsOwnerLocal = async (req, res, next) => {
     next(error);
   }
 };
+const updateItsMeLocal = (req, res, next) => {
+  console.log("EEEEEEEEEE", req.session.activeUser._id, req.params.profileId);
 
-module.exports = { isLoggedIn, updateUserActiveLocal, updateIsOwnerLocal };
+  if (req.session.activeUser._id === req.params.profileId) {
+    res.locals.itsMe = true;
+  } else {
+    res.locals.itsMe = false;
+  }
+  next();
+};
+
+module.exports = {
+  isLoggedIn,
+  updateUserActiveLocal,
+  updateIsReviewOwnerLocal,
+  updateItsMeLocal,
+};

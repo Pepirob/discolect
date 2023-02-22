@@ -8,6 +8,10 @@ router.use(updateUserActiveLocal);
 
 /* GET home page */
 router.get("/", async (req, res, next) => {
+  if (req.session.activeUser) {
+    const userActiveId = req.session.activeUser._id;
+  }
+
   try {
     const latestEntries = await Review.find()
       .populate("author", "_id username")

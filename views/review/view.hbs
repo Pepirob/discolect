@@ -9,7 +9,7 @@
     <h4>{{rating}}/10</h4>
     <img src="{{image}}" alt="image from blog {{blogName}}" width="150" />
     <h3>by {{blogName}}</h3>
-    {{#if isUserOwner}}
+    {{#if isReviewOwner}}
     <a href="/review/{{albumId}}/{{reviewId}}/edit">EDIT</a>
     <form action="/review/{{albumId}}/{{reviewId}}/delete" method="post">
       <button>DELETE REVIEW</button>

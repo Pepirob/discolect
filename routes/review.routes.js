@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Review = require("../models/Review.model");
 const User = require("../models/User.model");
-const { updateIsOwnerLocal } = require("../middleware/auth");
+const { updateIsReviewOwnerLocal } = require("../middleware/auth");
 const spotifyApi = require("../config/spotifyApi.config");
 const { joinProperties } = require("../utils");
 
@@ -149,38 +149,42 @@ router.post("/:albumId/create", async (req, res, next) => {
   }
 });
 
-router.get("/:albumId/:reviewId", updateIsOwnerLocal, (req, res, next) => {
-  const { albumId, reviewId } = req.params;
+router.get(
+  "/:albumId/:reviewId",
+  updateIsReviewOwnerLocal,
+  (req, res, next) => {
+    const { albumId, reviewId } = req.params;
 
-  spotifyApi
-    .getAlbum(albumId)
-    .then((response) => {
-      const albumBiggestImage = response.body.images[0].url;
-      const { name } = response.body;
+    spotifyApi
+      .getAlbum(albumId)
+      .then((response) => {
+        const albumBiggestImage = response.body.images[0].url;
+        const { name } = response.body;
 
-      Review.findById(reviewId)
-        .populate("author")
-        .then((response) => {
-          const { blogName, image } = response.author;
-          const { content, subheading, rating } = response;
+        Review.findById(reviewId)
+          .populate("author")
+          .then((response) => {
+            const { blogName, image } = response.author;
+            const { content, subheading, rating } = response;
 
-          res.render("review/view.hbs", {
-            image,
-            blogName,
-            name,
-            rating,
-            albumBiggestImage,
-            subheading,
-            content,
-            albumId,
-            reviewId,
+            res.render("review/view.hbs", {
+              image,
+              blogName,
+              name,
+              rating,
+              albumBiggestImage,
+              subheading,
+              content,
+              albumId,
+              reviewId,
+            });
           });
-        });
-    })
-    .catch((error) => {
-      next(error);
-    });
-});
+      })
+      .catch((error) => {
+        next(error);
+      });
+  }
+);
 
 router.get("/:albumId/:reviewId/edit", (req, res, next) => {
   const { albumId, reviewId } = req.params;

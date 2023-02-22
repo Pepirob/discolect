@@ -2,11 +2,19 @@
   {{>navigation}}
 </header>
 <main>
-  <section style="float: right">
+  <aside>
+    <img src="{{userData.image}}" alt="this is a picture of {{userData.username}}" width="300" />
+    <p>Joined: {{registerDate}}</p>
+   {{#if itsMe}}
+      
+    <a href="/profile/edit">EDIT</a>
+   {{/if}}
+
+  </aside>
+  <section>
     <h1>{{userData.username}}</h1>
     <ul>
       {{#each userReviews}}
-      {{this}}
       <li>
         <a href="/review/{{this.spotifyId}}/{{this._id}}">
           <img src="{{this.albumImg}}" alt="Cover art from {{this.albumName}}" width="150">
@@ -17,9 +25,4 @@
       {{/each}}
     </ul>
   </section>
-  <aside>
-    <img src="{{userData.image}}" alt="this is a picture of {{userData.username}}" width="300" />
-    <p>Joined: {{registerDate}}</p>
-    <a href="/profile/edit">EDIT</a>
-  </aside>
 </main>

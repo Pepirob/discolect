@@ -3,33 +3,62 @@ const router = express.Router();
 
 const fileUploader = require("../config/cloudinary.config");
 
-const { isLoggedIn } = require("../middleware/auth");
+const { isLoggedIn, updateItsMeLocal } = require("../middleware/auth");
 const Review = require("../models/Review.model");
 const User = require("../models/User.model");
 
-router.get("/", isLoggedIn, async (req, res, next) => {
-  const userId = req.session.activeUser._id;
+// router.get("/", isLoggedIn, updateItsMeLocal, async (req, res, next) => {
+//   const userId = req.session.activeUser._id;
 
-  try {
-    const userData = await User.findById(userId);
+//   try {
+//     const userData = await User.findById(userId);
 
-    const userReviews = await Review.find(
-      { author: userId },
-      { spotifyId: 1, albumName: 1, albumImg: 1, artistNames: 1 }
-    );
+//     const userReviews = await Review.find(
+//       { author: userId },
+//       { spotifyId: 1, albumName: 1, albumImg: 1, artistNames: 1 }
+//     );
 
-    const date = new Date(userData.createdAt);
-    const registerDate = date.toLocaleDateString();
+//     const date = new Date(userData.createdAt);
+//     const registerDate = date.toLocaleDateString();
 
-    res.render("profile/my-profile.hbs", {
-      registerDate,
-      userData,
-      userReviews,
-    });
-  } catch (error) {
-    next(error);
+//     res.render("profile/my-profile.hbs", {
+//       registerDate,
+//       userData,
+//       userReviews,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
+
+router.get(
+  "/:profileId",
+  isLoggedIn,
+  updateItsMeLocal,
+  async (req, res, next) => {
+    const { profileId } = req.params;
+
+    try {
+      const userData = await User.findById(profileId);
+
+      const userReviews = await Review.find(
+        { author: profileId },
+        { spotifyId: 1, albumName: 1, albumImg: 1, artistNames: 1 }
+      );
+
+      const date = new Date(userData.createdAt);
+      const registerDate = date.toLocaleDateString();
+
+      res.render("profile/my-profile.hbs", {
+        registerDate,
+        userData,
+        userReviews,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.get("/edit", isLoggedIn, async (req, res, next) => {
   const { _id } = req.session.activeUser;
