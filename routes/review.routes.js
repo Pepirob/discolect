@@ -264,7 +264,6 @@ router.get("/search", async (req, res, next) => {
         ],
       })
         .sort({ updatedAt: -1 })
-        .limit(10)
         .populate("author", "_id username")
         .select({ author: 1, albumImg: 1, albumName: 1, artistsNames: 1 });
 
