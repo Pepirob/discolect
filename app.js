@@ -19,7 +19,7 @@ const app = express();
 require("./config")(app);
 
 // default value for title local
-const capitalize = require("./utils/capitalize");
+const { capitalize } = require("./utils");
 const projectName = "discolect";
 
 app.locals.appTitle = `${capitalize(projectName)}`;

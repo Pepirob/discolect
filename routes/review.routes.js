@@ -4,6 +4,7 @@ const Review = require("../models/Review.model");
 const User = require("../models/User.model");
 const { updateIsOwnerLocal } = require("../middleware/auth");
 const spotifyApi = require("../config/spotifyApi.config");
+const { joinProperties } = require("../utils");
 
 // TODO EXTRACT SPOTIFY FETCHING TO SERVICES FILE
 
@@ -70,9 +71,8 @@ router.get("/:albumId/create", (req, res, next) => {
   spotifyApi
     .getAlbum(albumId)
     .then((response) => {
-      const artistNames = response.body.artists
-        .map((artist) => artist.name)
-        .join(", ");
+      const artistNames = joinProperties(response.body.artists, "name");
+
       const albumBiggestImage = response.body.images[0].url;
       const { name, label, release_date } = response.body;
       const releaseYear = release_date.slice(0, 4);
@@ -110,9 +110,14 @@ router.post("/:albumId/create", async (req, res, next) => {
     const albumData = await spotifyApi.getAlbum(albumId);
 
     const {
+      artists,
       name,
       images: [bigImage, ...rest],
     } = albumData.body;
+
+    const artistNames = artists.map((artist) => artist.name).join(", ");
+
+    console.log(albumData.body);
 
     const foundAlbum = await Review.findOne({
       author: req.session.activeUser._id,
@@ -135,6 +140,7 @@ router.post("/:albumId/create", async (req, res, next) => {
       spotifyId: albumId,
       albumName: name,
       albumImg: bigImage.url,
+      artistNames,
     });
 
     res.redirect(`/review/${albumId}/${newReview._id}`);
@@ -182,9 +188,7 @@ router.get("/:albumId/:reviewId/edit", (req, res, next) => {
   spotifyApi
     .getAlbum(albumId)
     .then((response) => {
-      const artistNames = response.body.artists
-        .map((artist) => artist.name)
-        .join(", ");
+      const artistNames = joinProperties(response.body.artists, "name");
       const albumBiggestImage = response.body.images[0].url;
       const { name, label, release_date } = response.body;
       const releaseYear = release_date.slice(0, 4);
@@ -243,6 +247,32 @@ router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
     res.redirect("/profile");
   } catch (error) {
     next(error);
+  }
+});
+
+router.get("/search", async (req, res, next) => {
+  const { reviewSearch } = req.query;
+
+  const searchRegExp = new RegExp(`${reviewSearch}`, "i");
+
+  if (reviewSearch.length > 2) {
+    try {
+      const foundReviews = await Review.find({
+        $or: [
+          { albumName: { $regex: searchRegExp } },
+          { artistNames: { $regex: searchRegExp } },
+        ],
+      })
+        .sort({ updatedAt: -1 })
+        .populate("author", "_id username")
+        .select({ author: 1, albumImg: 1, albumName: 1, artistsNames: 1 });
+
+      res.render("review/review-search-list.hbs", { foundReviews });
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    res.render("review/review-search-list.hbs");
   }
 });
 
