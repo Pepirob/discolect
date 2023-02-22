@@ -2,7 +2,14 @@
   {{>navigation}}
 </header>
 <main>
+  {{#if foundReviews}}
   <h1>SEARCH REVIEW RESULTS</h1>
+  {{else}}
+
+  <h1>NO SEARCH RESULTS</h1>
+  <p>Please try again with another search</p>
+
+  {{/if}}
   <ul>
     {{#each foundReviews}}
     <li>
