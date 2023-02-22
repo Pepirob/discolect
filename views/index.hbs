@@ -10,7 +10,11 @@
       <a href="/review/{{this.spotifyId}}/{{this._id}}">
         <img src="{{this.albumImg}}" alt="Cover {{this.albumName}}" width="150">
         <h3>{{this.albumName}}</h3>
-        <h4>{{this.subheading}}</h4>
+        <h4>{{this.artistNames}}</h4>
+      </a>
+      <a href="/profile/{{this.author._id}}">
+        <h5>{{this.author.username}}</h5>
+      </a>
       </a>
     </li>
     {{/each}}

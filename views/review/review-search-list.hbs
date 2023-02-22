@@ -13,10 +13,14 @@
   <ul>
     {{#each foundReviews}}
     <li>
-      <img src="{{this.albumImg}}" alt="cover art from {{albumName}}" width="100">
-      <h3>{{this.albumName}}</h3>
-      <h4>{{this.artistsNames}}</h4>
-      <h5>{{this.author.username}}</h5>
+      <a href="/review/{{this.spotifyId}}/{{this._id}}">
+        <img src="{{this.albumImg}}" alt="cover art from {{albumName}}" width="100">
+        <h3>{{this.albumName}}</h3>
+        <h4>{{this.artistNames}}</h4>
+      </a>
+      <a href="/profile/{{this.author._id}}">
+        <h5>{{this.author.username}}</h5>
+      </a>
     </li>
     {{/each}}
   </ul>

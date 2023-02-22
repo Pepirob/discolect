@@ -265,7 +265,13 @@ router.get("/search", async (req, res, next) => {
       })
         .sort({ updatedAt: -1 })
         .populate("author", "_id username")
-        .select({ author: 1, albumImg: 1, albumName: 1, artistsNames: 1 });
+        .select({
+          author: 1,
+          albumImg: 1,
+          albumName: 1,
+          artistNames: 1,
+          spotifyId: 1,
+        });
 
       res.render("review/review-search-list.hbs", { foundReviews });
     } catch (error) {

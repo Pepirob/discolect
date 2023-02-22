@@ -10,7 +10,14 @@ router.use(updateUserActiveLocal);
 router.get("/", async (req, res, next) => {
   try {
     const latestEntries = await Review.find()
-      .select({ albumName: 1, albumImg: 1, subheading: 1, spotifyId: 1 })
+      .populate("author", "_id username")
+      .select({
+        author: 1,
+        albumImg: 1,
+        albumName: 1,
+        artistNames: 1,
+        spotifyId: 1,
+      })
       .sort({ updatedAt: -1 })
       .limit(3);
 
