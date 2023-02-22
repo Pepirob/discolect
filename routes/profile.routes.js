@@ -7,36 +7,18 @@ const { isLoggedIn, updateItsMeLocal } = require("../middleware/auth");
 const Review = require("../models/Review.model");
 const User = require("../models/User.model");
 
-// router.get("/", isLoggedIn, updateItsMeLocal, async (req, res, next) => {
-//   const userId = req.session.activeUser._id;
-
-//   try {
-//     const userData = await User.findById(userId);
-
-//     const userReviews = await Review.find(
-//       { author: userId },
-//       { spotifyId: 1, albumName: 1, albumImg: 1, artistNames: 1 }
-//     );
-
-//     const date = new Date(userData.createdAt);
-//     const registerDate = date.toLocaleDateString();
-
-//     res.render("profile/my-profile.hbs", {
-//       registerDate,
-//       userData,
-//       userReviews,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
 router.get(
   "/:profileId",
   isLoggedIn,
   updateItsMeLocal,
   async (req, res, next) => {
     const { profileId } = req.params;
+
+    const getUserId = () => {
+      if (req.session.activeUser) {
+        return req.session.activeUser._id;
+      }
+    };
 
     try {
       const userData = await User.findById(profileId);
@@ -53,6 +35,7 @@ router.get(
         registerDate,
         userData,
         userReviews,
+        userActiveId: getUserId(),
       });
     } catch (error) {
       next(error);

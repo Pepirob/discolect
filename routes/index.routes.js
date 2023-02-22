@@ -8,9 +8,11 @@ router.use(updateUserActiveLocal);
 
 /* GET home page */
 router.get("/", async (req, res, next) => {
-  if (req.session.activeUser) {
-    const userActiveId = req.session.activeUser._id;
-  }
+  const getUserId = () => {
+    if (req.session.activeUser) {
+      return req.session.activeUser._id;
+    }
+  };
 
   try {
     const latestEntries = await Review.find()
@@ -25,7 +27,7 @@ router.get("/", async (req, res, next) => {
       .sort({ updatedAt: -1 })
       .limit(3);
 
-    res.render("index.hbs", { latestEntries });
+    res.render("index.hbs", { latestEntries, userActiveId: getUserId() });
   } catch (error) {
     next(error);
   }

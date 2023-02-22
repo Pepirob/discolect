@@ -1,14 +1,14 @@
 <header>
-  {{>navigation}}
+  {{>navigation this}}
 </header>
 <main>
   <aside>
     <img src="{{userData.image}}" alt="this is a picture of {{userData.username}}" width="300" />
     <p>Joined: {{registerDate}}</p>
-   {{#if itsMe}}
-      
+    {{#if itsMe}}
+
     <a href="/profile/edit">EDIT</a>
-   {{/if}}
+    {{/if}}
 
   </aside>
   <section>

@@ -28,7 +28,9 @@ router.get("/artist-search", (req, res, next) => {
           };
         });
 
-        res.render("review/artist-search-list.hbs", { artistList });
+        res.render("review/artist-search-list.hbs", {
+          artistList,
+        });
       })
       .catch((error) => {
         next(error);
@@ -153,6 +155,12 @@ router.get(
   "/:albumId/:reviewId",
   updateIsReviewOwnerLocal,
   (req, res, next) => {
+    const getUserId = () => {
+      if (req.session.activeUser) {
+        return req.session.activeUser._id;
+      }
+    };
+
     const { albumId, reviewId } = req.params;
 
     spotifyApi
@@ -177,6 +185,7 @@ router.get(
               content,
               albumId,
               reviewId,
+              userActiveId: getUserId(),
             });
           });
       })
@@ -255,6 +264,12 @@ router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
 });
 
 router.get("/search", async (req, res, next) => {
+  const getUserId = () => {
+    if (req.session.activeUser) {
+      return req.session.activeUser._id;
+    }
+  };
+
   const { reviewSearch } = req.query;
 
   const searchRegExp = new RegExp(`${reviewSearch}`, "i");
@@ -277,12 +292,18 @@ router.get("/search", async (req, res, next) => {
           spotifyId: 1,
         });
 
-      res.render("review/review-search-list.hbs", { foundReviews });
+      res.render("review/review-search-list.hbs", {
+        foundReviews,
+        userActiveId: getUserId(),
+      });
     } catch (error) {
       next(error);
     }
   } else {
-    res.render("review/review-search-list.hbs");
+    res.render("review/review-search-list.hbs", {
+      foundReviews,
+      userActiveId: getUserId(),
+    });
   }
 });
 
