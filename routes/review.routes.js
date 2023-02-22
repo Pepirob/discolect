@@ -262,8 +262,13 @@ router.get("/search", async (req, res, next) => {
           { albumName: { $regex: searchRegExp } },
           { artistNames: { $regex: searchRegExp } },
         ],
-      }).sort({ updatedAt: -1 });
-      res.render("review/review-search-list.hbs");
+      })
+        .sort({ updatedAt: -1 })
+        .limit(10)
+        .populate("author", "_id username")
+        .select({ author: 1, albumImg: 1, albumName: 1, artistsNames: 1 });
+
+      res.render("review/review-search-list.hbs", { foundReviews });
     } catch (error) {
       next(error);
     }
