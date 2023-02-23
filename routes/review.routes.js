@@ -188,7 +188,7 @@ router.get(
     try {
       const albumResponse = await spotifyApi.getAlbum(albumId);
 
-      const { artists, name, label, release_date } = albumResponse.body;
+      const { artists, label, release_date } = albumResponse.body;
 
       const artistNames = joinProperties(albumResponse.body.artists, "name");
       const releaseYear = release_date.slice(0, 4);
@@ -215,15 +215,16 @@ router.get(
       const { content, subheading, rating, albumImg, albumName } =
         reviewResponse;
 
-      const { blogName, image, username } = reviewResponse.author;
+      const { blogName, image, username, _id } = reviewResponse.author;
 
       res.render("review/view.hbs", {
         artistNames,
         genres,
         label,
         releaseYear,
-        userImage: image,
-        username,
+        authorImage: image,
+        authorName: username,
+        authorId: _id,
         blogName,
         rating,
         albumImg,
@@ -232,7 +233,6 @@ router.get(
         albumName,
         reviewId,
         content,
-        userActiveId: getUserId(),
       });
     } catch (error) {
       next(error);

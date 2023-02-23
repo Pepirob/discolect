@@ -5,7 +5,7 @@
 <main>
   <article>
     <section>
-      <h2>{{blogName}}</h2>
+      <h2>{{blogName}}'s Blog</h2>
       <h1>{{albumName}}</h1>
     </section>
 
@@ -16,8 +16,10 @@
       <h4>Label: {{label}}</h4>
       <h4>Released: {{releaseYear}}</h4>
       <h3>{{rating}}/10</h3>
-      <img src="{{userImage}}" alt="image from blog {{blogName}}" width="150" />
-      <h5>Reviewed by: {{username}}</h5>
+      <img src="{{authorImage}}" alt="image from blog {{blogName}}" width="150" />
+      <h5>Reviewed by:
+        <a href="/profile/{{authorId}}">{{authorName}}</a>
+      </h5>
 
       {{#if isReviewOwner}}
       <a href="/review/{{albumId}}/{{reviewId}}/edit">EDIT</a>
