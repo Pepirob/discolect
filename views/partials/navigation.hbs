@@ -1,24 +1,24 @@
 <nav>
-  <ul>
+  <ul class="header-navigation-list">
     <li>
-      <a href="/">HOME</a>
+      <a class="header-navigation-item" href="/">HOME</a>
     </li>
     {{#if isUserActive}}
     <li>
-      <a href="/profile/{{this.userActiveId}}">PROFILE</a>
+      <a class="header-navigation-item" href="/profile/{{this.userActiveId}}">PROFILE</a>
     </li>
     <li>
-      <a href="/review/artist-search">CREATE REVIEW</a>
+      <a class="header-navigation-item" href="/review/artist-search">CREATE REVIEW</a>
     </li>
     <li>
-      <a style="color: red;" href=" /auth/logout">LOGOUT</a>
+      <a class="header-navigation-item" style="color: red;" href=" /auth/logout">LOGOUT</a>
     </li>
     {{else}}
     <li>
-      <a href="/auth/signup">SIGNUP</a>
+      <a class="header-navigation-item" href="/auth/signup">SIGNUP</a>
     </li>
     <li>
-      <a href="/auth/login">LOGIN</a>
+      <a class="header-navigation-item" href="/auth/login">LOGIN</a>
     </li>
     {{/if}}
   </ul>
