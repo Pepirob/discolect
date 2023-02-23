@@ -309,6 +309,7 @@ router.get("/search", async (req, res, next) => {
     }
   };
   const nextPage = parseInt(page) + 1;
+
   const limit = 10;
 
   const searchRegExp = new RegExp(`${reviewSearch}`, "i");
