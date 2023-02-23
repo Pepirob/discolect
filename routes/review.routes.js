@@ -203,10 +203,12 @@ router.get(
 
       const reviewResponse = await Review.findById(reviewId).populate("author");
 
-      const { content, subheading, rating, albumImg, albumName } =
+      const { content, subheading, rating, albumImg, albumName, updatedAt } =
         reviewResponse;
 
       const { blogName, image, username, _id } = reviewResponse.author;
+
+      const reviewDate = new Date(updatedAt).toLocaleDateString();
 
       res.render("review/view.hbs", {
         artistNames,
@@ -216,6 +218,7 @@ router.get(
         authorImage: image,
         authorName: username,
         authorId: _id,
+        reviewDate,
         blogName,
         rating,
         albumImg,
