@@ -1,7 +1,7 @@
 <h1>EDIT REVIEW</h1>
 
 <section>
-  <img src="{{albumBiggestImage}}" alt="Album cover of {{name}}" width="300" />
+  <img src="{{albumImage}}" alt="Album cover of {{name}}" width="300" />
   <h2>{{name}}</h2>
   <h3>by {{artistNames}}</h3>
   <h4>Label: {{label}}</h4>
@@ -13,34 +13,15 @@
 
   <form action="/review/{{albumId}}/{{reviewId}}/edit" method="post">
     <label for="rating">RATING: </label>
-    <input
-      type="number"
-      name="rating"
-      min="0"
-      max="10"
-      value="{{rating}}"
-      required
-    />
+    <input type="number" name="rating" min="0" max="10" value="{{rating}}" required />
     <br />
     <label for="subheading">SUBHEADING: </label>
-    <input
-      type="text"
-      name="subheading"
-      maxlength="500"
-      value="{{subheading}}"
-      required
-    />
+    <input type="text" name="subheading" maxlength="500" value="{{subheading}}" required />
     <br />
     <label for="“content”">YOUR REVIEW: </label>
     <br />
-    <textarea
-      name="content"
-      rows="15"
-      cols="50"
-      {{!minlength=“500” }}
-      maxlength='“5500"'
-      required
-    > {{content}} </textarea>
+    <textarea name="content" rows="15" cols="50" {{!minlength=“500” }} maxlength='“5500"'
+      required> {{content}} </textarea>
     <br />
     <a href="/review/"></a>
     <button>EDIT REVIEW</button>

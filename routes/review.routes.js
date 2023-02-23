@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Review = require("../models/Review.model");
-const User = require("../models/User.model");
 const { updateIsReviewOwnerLocal } = require("../middleware/auth");
 const spotifyApi = require("../config/spotifyApi.config");
 const { joinProperties } = require("../utils");
@@ -65,36 +64,58 @@ router.get("/:artistId/album-choose", (req, res, next) => {
     .catch((error) => next(error));
 });
 
-router.get("/:albumId/create", (req, res, next) => {
+router.get("/:albumId/create", async (req, res, next) => {
   const { albumId } = req.params;
-  const { _id } = req.session.activeUser;
+  const { _id, username } = req.session.activeUser;
   const { errorMessage } = req.query;
 
-  spotifyApi
-    .getAlbum(albumId)
-    .then((response) => {
-      const artistNames = joinProperties(response.body.artists, "name");
+  try {
+    const albumResponse = await spotifyApi.getAlbum(albumId);
 
-      const albumBiggestImage = response.body.images[0].url;
-      const { name, label, release_date } = response.body;
-      const releaseYear = release_date.slice(0, 4);
+    const {
+      artists,
+      name,
+      label,
+      release_date,
+      images: [biggest, ...rest],
+    } = albumResponse.body;
 
-      User.findById(_id).then((response) => {
-        res.render("review/form-create.hbs", {
-          albumBiggestImage,
-          artistNames,
-          name,
-          label,
-          releaseYear,
-          albumId,
-          image: response.image,
-          errorMessage,
-        });
-      });
-    })
-    .catch((error) => {
-      next(error);
+    const artistNames = joinProperties(albumResponse.body.artists, "name");
+    const albumImage = biggest.url;
+    const releaseYear = release_date.slice(0, 4);
+
+    const artistCalls = artists.map((artist) =>
+      spotifyApi.getArtist(artist["id"])
+    );
+
+    const foundArtists = await Promise.all(
+      artistCalls.map(async (call) => {
+        const response = await call;
+        return response;
+      })
+    );
+
+    const allGenres = foundArtists
+      .map((artistResponse) => artistResponse.body.genres)
+      .reduce((acc, artistGenres) => acc.concat(artistGenres), []);
+
+    const genres = [...new Set(allGenres)].join(", ");
+
+    res.render("review/form-create.hbs", {
+      albumImage,
+      artistNames,
+      albumName: name,
+      username,
+      label,
+      genres,
+      releaseYear,
+      albumId,
+      image: response.image,
+      errorMessage,
     });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post("/:albumId/create", async (req, res, next) => {
@@ -118,8 +139,6 @@ router.post("/:albumId/create", async (req, res, next) => {
     } = albumData.body;
 
     const artistNames = artists.map((artist) => artist.name).join(", ");
-
-    console.log(albumData.body);
 
     const foundAlbum = await Review.findOne({
       author: req.session.activeUser._id,
@@ -154,45 +173,62 @@ router.post("/:albumId/create", async (req, res, next) => {
 router.get(
   "/:albumId/:reviewId",
   updateIsReviewOwnerLocal,
-  (req, res, next) => {
+  async (req, res, next) => {
     // TODO => DRY to util or middleware
-    const getUserId = () => {
-      if (req.session.activeUser) {
-        return req.session.activeUser._id;
-      }
-    };
-
     const { albumId, reviewId } = req.params;
 
-    spotifyApi
-      .getAlbum(albumId)
-      .then((response) => {
-        const albumBiggestImage = response.body.images[0].url;
-        const { name } = response.body;
+    try {
+      const albumResponse = await spotifyApi.getAlbum(albumId);
 
-        Review.findById(reviewId)
-          .populate("author")
-          .then((response) => {
-            const { blogName, image } = response.author;
-            const { content, subheading, rating } = response;
+      const { artists, label, release_date } = albumResponse.body;
 
-            res.render("review/view.hbs", {
-              image,
-              blogName,
-              name,
-              rating,
-              albumBiggestImage,
-              subheading,
-              content,
-              albumId,
-              reviewId,
-              userActiveId: getUserId(),
-            });
-          });
-      })
-      .catch((error) => {
-        next(error);
+      const artistNames = joinProperties(albumResponse.body.artists, "name");
+      const releaseYear = release_date.slice(0, 4);
+
+      const artistCalls = artists.map((artist) =>
+        spotifyApi.getArtist(artist["id"])
+      );
+
+      const foundArtists = await Promise.all(
+        artistCalls.map(async (call) => {
+          const response = await call;
+          return response;
+        })
+      );
+
+      const allGenres = foundArtists
+        .map((artistResponse) => artistResponse.body.genres)
+        .reduce((acc, artistGenres) => acc.concat(artistGenres), []);
+
+      const genres = [...new Set(allGenres)].join(", ");
+
+      const reviewResponse = await Review.findById(reviewId).populate("author");
+
+      const { content, subheading, rating, albumImg, albumName } =
+        reviewResponse;
+
+      const { blogName, image, username, _id } = reviewResponse.author;
+
+      res.render("review/view.hbs", {
+        artistNames,
+        genres,
+        label,
+        releaseYear,
+        authorImage: image,
+        authorName: username,
+        authorId: _id,
+        blogName,
+        rating,
+        albumImg,
+        subheading,
+        albumId,
+        albumName,
+        reviewId,
+        content,
       });
+    } catch (error) {
+      next(error);
+    }
   }
 );
 
@@ -203,7 +239,7 @@ router.get("/:albumId/:reviewId/edit", (req, res, next) => {
     .getAlbum(albumId)
     .then((response) => {
       const artistNames = joinProperties(response.body.artists, "name");
-      const albumBiggestImage = response.body.images[0].url;
+      const albumImage = response.body.images[0].url;
       const { name, label, release_date } = response.body;
       const releaseYear = release_date.slice(0, 4);
 
@@ -221,7 +257,7 @@ router.get("/:albumId/:reviewId/edit", (req, res, next) => {
             blogName,
             name,
             rating,
-            albumBiggestImage,
+            albumImage,
             subheading,
             content,
             albumId,
