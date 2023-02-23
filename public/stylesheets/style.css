@@ -50,7 +50,6 @@ input {
 }
 
 .header {
-  padding: 1rem;
   position: fixed;
   background-color: var(--color-background);
   box-shadow: 7px 2px 11px var(--color-white);
@@ -60,6 +59,7 @@ input {
 .header-navigation {
   display: flex;
   flex-direction: column-reverse;
+  padding: 1rem;
 }
 
 .header-navigation-list {
@@ -91,6 +91,23 @@ input {
   width: 70%;
 }
 
+@media (min-width: 768px) {
+  .header-navigation {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-navigation-item {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  .header-navigation-list {
+    margin: 0;
+  }
+}
+
 /* BUTTONS */
 
 .button {
@@ -102,4 +119,15 @@ input {
   background-color: var(--color-primary);
   color: var(--color-white);
   border: 1px solid var(--color-white);
+}
+
+@media (max-width: 600px) {
+}
+
+/* CONTAINERS */
+
+@media (min-width: 1024px) {
+  .header-navigation {
+    justify-content: space-evenly;
+  }
 }
