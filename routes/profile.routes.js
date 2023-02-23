@@ -18,19 +18,28 @@ router.get("/:profileId", updateItsMeLocal, async (req, res, next) => {
   };
 
   try {
-    const userData = await User.findById(profileId);
+    const userData = await User.findById(profileId).select({
+      username: 1,
+      blogName: 1,
+      image: 1,
+      createdAt: 1,
+    });
 
     const userReviews = await Review.find(
       { author: profileId },
       { spotifyId: 1, albumName: 1, albumImg: 1, artistNames: 1 }
     );
 
-    const date = new Date(userData.createdAt);
+    const { username, blogName, image, createdAt } = userData;
+    const date = new Date(createdAt);
     const registerDate = date.toLocaleDateString();
 
     res.render("profile/view.hbs", {
       registerDate,
-      userData,
+      username,
+      blogName,
+      image,
+      createdAt,
       userReviews,
       userActiveId: getUserId(),
     });

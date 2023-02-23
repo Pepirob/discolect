@@ -4,22 +4,24 @@
 </header>
 <main>
   <aside>
-    <img src="{{userData.image}}" alt="this is a picture of {{userData.username}}" width="300" />
-    <p>Joined: {{registerDate}}</p>
+    <img src="{{image}}" alt="this is a picture of {{username}}" width="300" />
+    <h2>{{username}}</h2>
+    <h3>Joined on {{registerDate}}</h3>
     {{#if itsMe}}
-
-    <a href="/profile/{{userActiveId}}/edit">EDIT</a>
+    <a href="/profile/{{userActiveId}}/edit">EDIT PROFILE</a>
     {{/if}}
   </aside>
   <section>
-    <h1>{{userData.username}}</h1>
+    <h1>Reviews on {{blogName}}'s Blog</h1>
     <ul>
       {{#each userReviews}}
       <li>
         <a href="/review/{{this.spotifyId}}/{{this._id}}">
           <img src="{{this.albumImg}}" alt="Cover art from {{this.albumName}}" width="150">
-          <h3>{{this.albumName}}</h3>
-          <h4>{{this.artistNames}}</h4>
+          <div>
+            <h2>{{this.albumName}}</h2>
+            <h3>{{this.artistNames}}</h3>
+          </div>
         </a>
       </li>
       {{/each}}
