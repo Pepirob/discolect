@@ -339,7 +339,6 @@ router.get("/search", async (req, res, next) => {
     }
   } else {
     res.render("review/review-search-list.hbs", {
-      foundReviews,
       userActiveId: getUserId(),
     });
   }
