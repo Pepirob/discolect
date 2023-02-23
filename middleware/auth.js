@@ -1,13 +1,5 @@
 const Review = require("../models/Review.model");
 
-const isLoggedIn = (req, res, next) => {
-  if (!req.session.activeUser) {
-    res.redirect("/auth/login");
-  } else {
-    next();
-  }
-};
-
 const updateUserActiveLocal = (req, res, next) => {
   if (req.session.activeUser === undefined) {
     res.locals.isUserActive = false;
@@ -37,9 +29,10 @@ const updateIsReviewOwnerLocal = async (req, res, next) => {
   }
 };
 const updateItsMeLocal = (req, res, next) => {
-  console.log("EEEEEEEEEE", req.session.activeUser._id, req.params.profileId);
-
-  if (req.session.activeUser._id === req.params.profileId) {
+  if (
+    req.session.activeUser &&
+    req.session.activeUser._id === req.params.profileId
+  ) {
     res.locals.itsMe = true;
   } else {
     res.locals.itsMe = false;
@@ -48,7 +41,6 @@ const updateItsMeLocal = (req, res, next) => {
 };
 
 module.exports = {
-  isLoggedIn,
   updateUserActiveLocal,
   updateIsReviewOwnerLocal,
   updateItsMeLocal,
