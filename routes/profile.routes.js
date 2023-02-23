@@ -28,7 +28,7 @@ router.get("/:profileId", updateItsMeLocal, async (req, res, next) => {
     const date = new Date(userData.createdAt);
     const registerDate = date.toLocaleDateString();
 
-    res.render("profile/my-profile.hbs", {
+    res.render("profile/view.hbs", {
       registerDate,
       userData,
       userReviews,
