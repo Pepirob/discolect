@@ -175,7 +175,7 @@ router.post("/:albumId/create", async (req, res, next) => {
 router.get(
   "/:albumId/:reviewId",
   updateIsReviewOwnerLocal,
-  (req, res, next) => {
+  async (req, res, next) => {
     // TODO => DRY to util or middleware
     const getUserId = () => {
       if (req.session.activeUser) {
@@ -185,35 +185,58 @@ router.get(
 
     const { albumId, reviewId } = req.params;
 
-    spotifyApi
-      .getAlbum(albumId)
-      .then((response) => {
-        const albumImage = response.body.images[0].url;
-        const { name } = response.body;
+    try {
+      const albumResponse = await spotifyApi.getAlbum(albumId);
 
-        Review.findById(reviewId)
-          .populate("author")
-          .then((response) => {
-            const { blogName, image } = response.author;
-            const { content, subheading, rating } = response;
+      const { artists, name, label, release_date } = albumResponse.body;
 
-            res.render("review/view.hbs", {
-              image,
-              blogName,
-              name,
-              rating,
-              albumImage,
-              subheading,
-              content,
-              albumId,
-              reviewId,
-              userActiveId: getUserId(),
-            });
-          });
-      })
-      .catch((error) => {
-        next(error);
+      const artistNames = joinProperties(albumResponse.body.artists, "name");
+      const releaseYear = release_date.slice(0, 4);
+
+      const artistCalls = artists.map((artist) =>
+        spotifyApi.getArtist(artist["id"])
+      );
+
+      const foundArtists = await Promise.all(
+        artistCalls.map(async (call) => {
+          const response = await call;
+          return response;
+        })
+      );
+
+      const allGenres = foundArtists
+        .map((artistResponse) => artistResponse.body.genres)
+        .reduce((acc, artistGenres) => acc.concat(artistGenres), []);
+
+      const genres = [...new Set(allGenres)].join(", ");
+
+      const reviewResponse = await Review.findById(reviewId).populate("author");
+
+      const { content, subheading, rating, albumImg, albumName } =
+        reviewResponse;
+
+      const { blogName, image, username } = reviewResponse.author;
+
+      res.render("review/view.hbs", {
+        artistNames,
+        genres,
+        label,
+        releaseYear,
+        userImage: image,
+        username,
+        blogName,
+        rating,
+        albumImg,
+        subheading,
+        albumId,
+        albumName,
+        reviewId,
+        content,
+        userActiveId: getUserId(),
       });
+    } catch (error) {
+      next(error);
+    }
   }
 );
 
