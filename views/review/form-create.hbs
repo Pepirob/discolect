@@ -1,30 +1,33 @@
-<h1>CREATE REVIEW</h1>
+<h1>{{albumName}}</h1>
 
 <section>
   <img src="{{albumImage}}" alt="Album cover of {{name}}" width="300" />
-  <h2>{{albumName}}</h2>
-  <h3>by {{artistNames}}</h3>
-  <h4>Genres: {{genres}}</h4>
-  <h4>Label: {{label}}</h4>
+  <h2>by {{artistNames}}</h2>
+  <h3>Genres: {{genres}}</h3>
+  <h3>Label: {{label}}</h3>
   <h4>Released: {{releaseYear}}</h4>
   <h5>Reviewed by: {{username}}</h5>
 </section>
 
 <section>
   <form action="/review/{{albumId}}/create" method="post">
-    <label for="rating">RATING: </label>
-    <input type="number" name="rating" min="0" max="10" required />
-    <br />
-    <label for="subheading">SUBHEADING: </label>
-    <input type="text" name="subheading" maxlength="500" required />
-    <br />
-    <label for="content">YOUR REVIEW: </label>
-    <br />
-    <textarea name="content" rows="15" cols="50" maxlength="5500" required>Write here</textarea>
-    <br />
-    {{#if errorMessage}}
-    <p style="color:red;">{{errorMessage}}</p>
-    {{/if}}
-    <button>CREATE REVIEW</button>
+    <fieldset>
+      <legend>DO YOUR REVIEW HERE</legend>
+      <div>
+        <label for="rating">RATING: </label>
+        <input type="number" name="rating" min="0" max="10" required />
+      </div>
+      <div>
+        <label for="subheading">SUBHEADING: </label>
+        <input type="text" name="subheading" maxlength="500" required />
+      </div>
+      <div>
+        <textarea name="content" rows="15" cols="50" maxlength="5500" required>Write here</textarea>
+      </div>
+      {{#if errorMessage}}
+      <p style="color:red;">{{errorMessage}}</p>
+      {{/if}}
+      <button>SUBMIT</button>
+    </fieldset>
   </form>
 </section>
