@@ -10,6 +10,7 @@ const User = require("../models/User.model");
 router.get("/:profileId", updateItsMeLocal, async (req, res, next) => {
   const { profileId } = req.params;
 
+  // TODO => DRY to util or middleware...or use profileId
   const getUserId = () => {
     if (req.session.activeUser) {
       return req.session.activeUser._id;

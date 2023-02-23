@@ -155,6 +155,7 @@ router.get(
   "/:albumId/:reviewId",
   updateIsReviewOwnerLocal,
   (req, res, next) => {
+    // TODO => DRY to util or middleware
     const getUserId = () => {
       if (req.session.activeUser) {
         return req.session.activeUser._id;
@@ -264,6 +265,8 @@ router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
 });
 
 router.get("/search", async (req, res, next) => {
+  // TODO => DRY to util or middleware
+
   const getUserId = () => {
     if (req.session.activeUser) {
       return req.session.activeUser._id;

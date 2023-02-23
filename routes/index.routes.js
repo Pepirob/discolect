@@ -8,6 +8,7 @@ router.use(updateUserActiveLocal);
 
 /* GET home page */
 router.get("/", async (req, res, next) => {
+  // TODO => DRY to util or middleware
   const getUserId = () => {
     if (req.session.activeUser) {
       return req.session.activeUser._id;
