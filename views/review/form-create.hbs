@@ -3,31 +3,16 @@
 <section>
   <img src="{{albumImage}}" alt="Album cover of {{name}}" width="300" />
   <h2>by {{artistNames}}</h2>
+  {{#if genres}}
   <h3>Genres: {{genres}}</h3>
+  {{/if}}
   <h3>Label: {{label}}</h3>
   <h4>Released: {{releaseYear}}</h4>
   <h5>Reviewed by: {{username}}</h5>
 </section>
 
 <section>
-  <form action="/review/{{albumId}}/create" method="post">
-    <fieldset>
-      <legend>DO YOUR REVIEW HERE</legend>
-      <div>
-        <label for="rating">RATING: </label>
-        <input type="number" name="rating" min="0" max="10" required />
-      </div>
-      <div>
-        <label for="subheading">SUBHEADING: </label>
-        <input type="text" name="subheading" maxlength="500" required />
-      </div>
-      <div>
-        <textarea name="content" rows="15" cols="50" maxlength="5500" required>Write here</textarea>
-      </div>
-      {{#if errorMessage}}
-      <p style="color:red;">{{errorMessage}}</p>
-      {{/if}}
-      <button>SUBMIT</button>
-    </fieldset>
+  <form action="/review/{{albumId}}/{{reviewId}}/edit" method="post">
+    {{>reviewForm this}}
   </form>
 </section>

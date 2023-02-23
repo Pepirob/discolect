@@ -1,29 +1,18 @@
-<h1>EDIT REVIEW</h1>
+<h1>{{albumName}}</h1>
 
 <section>
   <img src="{{albumImage}}" alt="Album cover of {{name}}" width="300" />
-  <h2>{{name}}</h2>
-  <h3>by {{artistNames}}</h3>
+  <h2>by {{artistNames}}</h2>
+  {{#if genres}}
+  <h3>Genres: {{genres}}</h3>
+  {{/if}}
   <h4>Label: {{label}}</h4>
   <h4>Released: {{releaseYear}}</h4>
+  <h5>Reviewed by: {{username}}</h5>
 </section>
 
 <section>
-  <img src="{{image}}" alt="the profile pic of user" width="200" />
-
   <form action="/review/{{albumId}}/{{reviewId}}/edit" method="post">
-    <label for="rating">RATING: </label>
-    <input type="number" name="rating" min="0" max="10" value="{{rating}}" required />
-    <br />
-    <label for="subheading">SUBHEADING: </label>
-    <input type="text" name="subheading" maxlength="500" value="{{subheading}}" required />
-    <br />
-    <label for="“content”">YOUR REVIEW: </label>
-    <br />
-    <textarea name="content" rows="15" cols="50" {{!minlength=“500” }} maxlength='“5500"'
-      required> {{content}} </textarea>
-    <br />
-    <a href="/review/"></a>
-    <button>EDIT REVIEW</button>
+    {{>reviewForm this}}
   </form>
 </section>
