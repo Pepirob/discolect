@@ -1,11 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Review = require("../models/Review.model");
-const User = require("../models/User.model");
 const { updateIsReviewOwnerLocal } = require("../middleware/auth");
 const spotifyApi = require("../config/spotifyApi.config");
 const { joinProperties } = require("../utils");
-const { response } = require("express");
 
 // TODO EXTRACT SPOTIFY FETCHING TO SERVICES FILE
 
@@ -177,12 +175,6 @@ router.get(
   updateIsReviewOwnerLocal,
   async (req, res, next) => {
     // TODO => DRY to util or middleware
-    const getUserId = () => {
-      if (req.session.activeUser) {
-        return req.session.activeUser._id;
-      }
-    };
-
     const { albumId, reviewId } = req.params;
 
     try {
