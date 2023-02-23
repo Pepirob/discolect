@@ -57,6 +57,7 @@ router.get("/:profileId/edit", async (req, res, next) => {
 
     res.render("profile/form-edit.hbs", {
       username: foundUser.username,
+      blogName: foundUser.blogName,
       userId: profileId,
       email: foundUser.email,
       image: foundUser.image,
@@ -72,7 +73,7 @@ router.post(
   fileUploader.single("avatar"),
   async (req, res, next) => {
     const { profileId } = req.params;
-    const { username, email, existingAvatar } = req.body;
+    const { username, email, existingAvatar, blogName } = req.body;
 
     if (!username || !email) {
       res.render("profile/form-edit.hbs", {
@@ -119,10 +120,17 @@ router.post(
         }
       }
 
+      let newBlogName = blogName;
+
+      if (newBlogName === "") {
+        newBlogName = username;
+      }
+
       await User.findByIdAndUpdate(
         profileId,
         {
           username,
+          blogName: newBlogName,
           email,
           image: imageUrl,
         },

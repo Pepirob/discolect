@@ -2,24 +2,33 @@
   <a href="/profile/{{userId}}">BACK TO PROFILE</a>
 </header>
 <main>
-  <h1>Edit profile</h1>
 
   <img src="{{image}}" alt="this is a picture of {{username}}" width="200px" />
   <form action="/profile/{{userId}}/edit" method="post" enctype="multipart/form-data">
-    <label for="avatar">AVATAR:</label>
-    <input type="file" name="avatar" />
-    <input type="text" name="existingAvatar" hidden value="{{image}}" />
-    <br />
-    <label for="username">USERNAME: </label>
-    <input type="text" name="username" required minlength="5" minlength="15" value="{{username}}" />
-    <br />
-    <label for="email">EMAIL: </label>
-    <input type="email" name="email" required value="{{email}}" />
-    <br />
-    {{#if errorMessage}}
-    <p style="color:red;">{{errorMessage}}</p>
-    {{/if}}
-    <button>UPDATE</button>
+    <fieldset>
+      <legend>Edit your profile</legend>
+      <div>
+        <label for="avatar">PROFILE IMAGE:</label>
+        <input type="file" name="avatar" />
+        <input type="text" name="existingAvatar" hidden value="{{image}}" />
+      </div>
+      <div>
+        <label for="blogName">BLOGNAME: </label>
+        <input type="text" name="blogName" value="{{blogName}}" />
+      </div>
+      <div>
+        <label for="username">USERNAME: </label>
+        <input type="text" name="username" required minlength="5" minlength="15" value="{{username}}" />
+      </div>
+      <div>
+        <label for="email">EMAIL: </label>
+        <input type="email" name="email" required value="{{email}}" />
+      </div>
+      {{#if errorMessage}}
+      <p style="color:red;">{{errorMessage}}</p>
+      {{/if}}
+      <button>UPDATE</button>
+    </fieldset>
   </form>
 
   <form action="/profile/delete" method="post">
