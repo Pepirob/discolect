@@ -3,27 +3,27 @@
 </header>
 
 <main>
-  <h1>SIGNUP</h1>
-
+  <h1>Sign in to {{appTitle}}</h1>
   <form action="/auth/signup" method="post">
-    <label for="username">USERNAME: </label>
-    <input type="text" name="username" required minlength="5" minlength="15" />
-    <br />
-    <label for="email">EMAIL: </label>
-    <input type="email" name="email" required />
-    <br />
-    <label for="password">PASSWORD: </label>
-    <input
-      type="password"
-      name="password"
-      required
-      minlength="9"
-      maxlength="15"
-    />
-    <br />
-    {{#if errorMessage}}
+    <fieldset>
+      <legend>Choose a great username and start reviewing all those incredible albums!</legend>
+      <div>
+        <label for="username">USERNAME: </label>
+        <input type="text" name="username" required minlength="5" minlength="15" />
+      </div>
+      <div>
+        <label for="email">EMAIL: </label>
+        <input type="email" name="email" required />
+
+      </div>
+      <div>
+        <label for="password">PASSWORD: </label>
+        <input type="password" name="password" required minlength="9" maxlength="15" />
+      </div>
+      {{#if errorMessage}}
       <p style="color:red;">{{errorMessage}}</p>
-    {{/if}}
-    <button>SUBMIT</button>
+      {{/if}}
+      <button>SUBMIT</button>
+    </fieldset>
   </form>
 </main>
