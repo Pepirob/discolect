@@ -35,7 +35,8 @@ h1,
 h2,
 h3,
 h4,
-h5 {
+h5,
+p {
   margin: 0;
 }
 
@@ -108,6 +109,16 @@ input {
   }
 }
 
+main {
+  padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .header-navigation {
+    justify-content: space-evenly;
+  }
+}
+
 /* BUTTONS */
 
 .button {
@@ -121,13 +132,86 @@ input {
   border: 1px solid var(--color-white);
 }
 
-@media (max-width: 600px) {
-}
-
 /* CONTAINERS */
 
 @media (min-width: 1024px) {
-  .header-navigation {
-    justify-content: space-evenly;
+  .container {
+    max-width: 1024px;
+    margin: 0 auto;
+  }
+}
+
+/* HOME */
+
+.home {
+  text-align: center;
+}
+
+.home-header {
+  margin-top: 8rem;
+  margin-bottom: 2rem;
+}
+
+.home-heading {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.home-subheading {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.home-list-item {
+  margin-bottom: 3rem;
+}
+
+.home-list-image {
+  margin-bottom: 0.75rem;
+  width: 10rem;
+  box-shadow: 0px 0px 4px var(--color-white);
+}
+
+.home-list-item-heading {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.home-list-item-subheading {
+  font-weight: normal;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .home-header {
+    margin-bottom: 5rem;
+  }
+
+  .home-heading {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+  }
+
+  .home-list-item-heading {
+    margin-bottom: 0.75rem;
+  }
+
+  .home-subheading {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .home-list {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .home-list-image {
+    width: 100%;
+  }
+
+  .home-list-item {
+    width: 15rem;
   }
 }
