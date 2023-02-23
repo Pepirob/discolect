@@ -12,21 +12,30 @@
 
     <section>
       <img src="{{albumImg}}" alt="Album cover of {{name}}" width="300" />
-      <h3>by {{artistNames}}</h3>
-      <h4>Genres: {{genres}}</h4>
-      <h4>Label: {{label}}</h4>
-      <h4>Released: {{releaseYear}}</h4>
-      <h3>{{rating}}/10</h3>
-      <img src="{{authorImage}}" alt="image from blog {{blogName}}" width="150" />
-      <h5>Reviewed by:
-        <a href="/profile/{{authorId}}">{{authorName}}</a>
-      </h5>
+      <div>
+        <h2>by {{artistNames}}</h2>
+        <h3>Genres: {{genres}}</h3>
+        <h3>Label: {{label}}</h3>
+        <h4>Released: {{releaseYear}}</h4>
+      </div>
+    </section>
 
+    <section>
+      <img src="{{authorImage}}" alt="image from blog {{blogName}}" width="150" />
+      <div>
+        <h2>{{rating}}/10</h2>
+        <h3>Reviewed by:
+          <a href="/profile/{{authorId}}">{{authorName}}</a>
+        </h3>
+        <h3>{{reviewDate}}</h3>
+      </div>
       {{#if isReviewOwner}}
-      <a href="/review/{{albumId}}/{{reviewId}}/edit">EDIT</a>
-      <form action="/review/{{albumId}}/{{reviewId}}/delete" method="post">
-        <button>DELETE REVIEW</button>
-      </form>
+      <div>
+        <a href="/review/{{albumId}}/{{reviewId}}/edit">EDIT</a>
+        <form action="/review/{{albumId}}/{{reviewId}}/delete" method="post">
+          <button>DELETE REVIEW</button>
+        </form>
+      </div>
       {{/if}}
     </section>
 
