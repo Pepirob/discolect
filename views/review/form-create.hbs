@@ -1,15 +1,6 @@
 <h1>{{albumName}}</h1>
 
-<section>
-  <img src="{{albumImage}}" alt="Album cover of {{name}}" width="300" />
-  <h2>by {{artistNames}}</h2>
-  {{#if genres}}
-  <h3>Genres: {{genres}}</h3>
-  {{/if}}
-  <h3>Label: {{label}}</h3>
-  <h4>Released: {{releaseYear}}</h4>
-  <h5>Reviewed by: {{username}}</h5>
-</section>
+{{>albumSheet this}}
 
 <section>
   <form action="/review/{{albumId}}/{{reviewId}}/edit" method="post">

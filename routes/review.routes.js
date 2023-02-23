@@ -83,7 +83,7 @@ router.get("/:albumId/create", async (req, res, next) => {
     } = albumResponse.body;
 
     const artistNames = joinProperties(albumResponse.body.artists, "name");
-    const albumImage = biggest.url;
+    const albumImg = biggest.url;
     const releaseYear = release_date.slice(0, 4);
 
     const artistCalls = artists.map((artist) =>
@@ -104,7 +104,7 @@ router.get("/:albumId/create", async (req, res, next) => {
     const genres = [...new Set(allGenres)].join(", ");
 
     res.render("review/form-create.hbs", {
-      albumImage,
+      albumImg,
       artistNames,
       albumName: name,
       username,
@@ -245,7 +245,7 @@ router.get("/:albumId/:reviewId/edit", (req, res, next) => {
     .getAlbum(albumId)
     .then((response) => {
       const artistNames = joinProperties(response.body.artists, "name");
-      const albumImage = response.body.images[0].url;
+      const albumImg = response.body.images[0].url;
       const { label, release_date } = response.body;
       const releaseYear = release_date.slice(0, 4);
       const formLiteral = "EDIT YOUR REVIEW";
@@ -266,7 +266,7 @@ router.get("/:albumId/:reviewId/edit", (req, res, next) => {
             image,
             blogName,
             rating,
-            albumImage,
+            albumImg,
             subheading,
             content,
             albumId,
