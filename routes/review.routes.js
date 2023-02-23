@@ -110,7 +110,6 @@ router.get("/:albumId/create", async (req, res, next) => {
       genres,
       releaseYear,
       albumId,
-      image: response.image,
       errorMessage,
     });
   } catch (error) {
