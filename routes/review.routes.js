@@ -5,6 +5,7 @@ const User = require("../models/User.model");
 const { updateIsReviewOwnerLocal } = require("../middleware/auth");
 const spotifyApi = require("../config/spotifyApi.config");
 const { joinProperties } = require("../utils");
+const { response } = require("express");
 
 // TODO EXTRACT SPOTIFY FETCHING TO SERVICES FILE
 
@@ -65,36 +66,58 @@ router.get("/:artistId/album-choose", (req, res, next) => {
     .catch((error) => next(error));
 });
 
-router.get("/:albumId/create", (req, res, next) => {
+router.get("/:albumId/create", async (req, res, next) => {
   const { albumId } = req.params;
   const { _id } = req.session.activeUser;
   const { errorMessage } = req.query;
 
-  spotifyApi
-    .getAlbum(albumId)
-    .then((response) => {
-      const artistNames = joinProperties(response.body.artists, "name");
+  try {
+    const albumResponse = await spotifyApi.getAlbum(albumId);
 
-      const albumBiggestImage = response.body.images[0].url;
-      const { name, label, release_date } = response.body;
-      const releaseYear = release_date.slice(0, 4);
+    const { artists, name, label, release_date } = albumResponse.body;
 
-      User.findById(_id).then((response) => {
-        res.render("review/form-create.hbs", {
-          albumBiggestImage,
-          artistNames,
-          name,
-          label,
-          releaseYear,
-          albumId,
-          image: response.image,
-          errorMessage,
-        });
-      });
-    })
-    .catch((error) => {
-      next(error);
-    });
+    const promiseQeue = artists.map((artist) =>
+      spotifyApi.getArtist(artist["id"])
+    );
+
+    const foundArtists = await Promise.all(
+      promiseQeue.map(async (artist) => {
+        const response = await artist;
+        return response;
+      })
+    );
+  } catch (error) {
+    next(error);
+  }
+  // spotifyApi
+  //   .getAlbum(albumId)
+  //   .then((albumResponse) => {
+  //     const { name, label, release_date } = albumResponse.body;
+
+  //     spotifyApi.getArtists("franco battiato").then((artistResponse) => {
+  //       console.log(artistResponse);
+  //       const artistNames = joinProperties(albumResponse.body.artists, "name");
+  //       const albumBiggestImage = albumResponse.body.images[0].url;
+  //       const releaseYear = release_date.slice(0, 4);
+
+  //       User.findById(_id).then((response) => {
+  //         res.render("review/form-create.hbs", {
+  //           albumBiggestImage,
+  //           artistNames,
+  //           name,
+  //           label,
+  //           genres,
+  //           releaseYear,
+  //           albumId,
+  //           image: response.image,
+  //           errorMessage,
+  //         });
+  //       });
+  //     });
+  //   })
+  //   .catch((error) => {
+  //     next(error);
+  //   });
 });
 
 router.post("/:albumId/create", async (req, res, next) => {
@@ -118,8 +141,6 @@ router.post("/:albumId/create", async (req, res, next) => {
     } = albumData.body;
 
     const artistNames = artists.map((artist) => artist.name).join(", ");
-
-    console.log(albumData.body);
 
     const foundAlbum = await Review.findOne({
       author: req.session.activeUser._id,
