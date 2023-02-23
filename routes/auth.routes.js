@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require("../models/User.model");
-const capitalize = require("../utils/capitalize");
+const { capitalize } = require("../utils");
 
 router.get("/signup", (req, res) => {
   res.render("auth/form-signup.hbs");

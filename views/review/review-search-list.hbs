@@ -2,19 +2,24 @@
   {{>navigation this}}
 </header>
 <main>
-  <h1>{{appTitle}} \m/</h1>
-  <h2>Latest Entries</h2>
+  {{#if foundReviews}}
+  <h1>SEARCH REVIEW RESULTS</h1>
+  {{else}}
+
+  <h1>NO SEARCH RESULTS</h1>
+  <p>Please try again with another search</p>
+
+  {{/if}}
   <ul>
-    {{#each latestEntries}}
+    {{#each foundReviews}}
     <li>
       <a href="/review/{{this.spotifyId}}/{{this._id}}">
-        <img src="{{this.albumImg}}" alt="Cover {{this.albumName}}" width="150">
+        <img src="{{this.albumImg}}" alt="cover art from {{albumName}}" width="100">
         <h3>{{this.albumName}}</h3>
         <h4>{{this.artistNames}}</h4>
       </a>
       <a href="/profile/{{this.author._id}}">
         <h5>{{this.author.username}}</h5>
-      </a>
       </a>
     </li>
     {{/each}}

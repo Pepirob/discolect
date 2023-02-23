@@ -34,6 +34,10 @@ const reviewSchema = new Schema(
       type: String,
       default: "https://cdn-icons-png.flaticon.com/512/33/33724.png",
     },
+    artistNames: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
