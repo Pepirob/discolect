@@ -3,19 +3,26 @@ const router = express.Router();
 
 const fileUploader = require("../config/cloudinary.config");
 
-const { isLoggedIn } = require("../middleware/auth");
+const { updateItsMeLocal } = require("../middleware/auth");
 const Review = require("../models/Review.model");
 const User = require("../models/User.model");
 
-router.get("/", isLoggedIn, async (req, res, next) => {
-  const userId = req.session.activeUser._id;
+router.get("/:profileId", updateItsMeLocal, async (req, res, next) => {
+  const { profileId } = req.params;
+
+  // TODO => DRY to util or middleware...or use profileId
+  const getUserId = () => {
+    if (req.session.activeUser) {
+      return req.session.activeUser._id;
+    }
+  };
 
   try {
-    const userData = await User.findById(userId);
+    const userData = await User.findById(profileId);
 
     const userReviews = await Review.find(
-      { author: userId },
-      { spotifyId: 1, albumName: 1, albumImg: 1 }
+      { author: profileId },
+      { spotifyId: 1, albumName: 1, albumImg: 1, artistNames: 1 }
     );
 
     const date = new Date(userData.createdAt);
@@ -25,21 +32,23 @@ router.get("/", isLoggedIn, async (req, res, next) => {
       registerDate,
       userData,
       userReviews,
+      userActiveId: getUserId(),
     });
   } catch (error) {
     next(error);
   }
 });
 
-router.get("/edit", isLoggedIn, async (req, res, next) => {
-  const { _id } = req.session.activeUser;
+router.get("/:profileId/edit", async (req, res, next) => {
+  const { profileId } = req.params;
   const { errorMessage } = req.query;
 
   try {
-    const foundUser = await User.findById(_id);
+    const foundUser = await User.findById(profileId);
 
     res.render("profile/form-edit.hbs", {
       username: foundUser.username,
+      userId: profileId,
       email: foundUser.email,
       image: foundUser.image,
       errorMessage,
@@ -49,69 +58,74 @@ router.get("/edit", isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.post("/edit", fileUploader.single("avatar"), async (req, res, next) => {
-  const { username, email, existingAvatar } = req.body;
+router.post(
+  "/:profileId/edit",
+  fileUploader.single("avatar"),
+  async (req, res, next) => {
+    const { profileId } = req.params;
+    const { username, email, existingAvatar } = req.body;
 
-  if (!username || !email) {
-    res.render("profile/form-edit.hbs", {
-      errorMessage: "All fields must be filled",
-    });
-    return;
-  }
-
-  let imageUrl;
-
-  if (req.file) {
-    imageUrl = req.file.path;
-  } else {
-    imageUrl = existingAvatar;
-  }
-
-  try {
-    const currentUser = await User.findById(req.session.activeUser._id, {
-      username: 1,
-      email: 1,
-    });
-
-    if (username !== currentUser.username) {
-      const foundUserByName = await User.findOne({ username: username });
-
-      if (foundUserByName) {
-        const errorMessage = "User with username already exists";
-
-        res.redirect(`/profile/edit?errorMessage=${errorMessage}`);
-
-        return;
-      }
+    if (!username || !email) {
+      res.render("profile/form-edit.hbs", {
+        errorMessage: "All fields must be filled",
+      });
+      return;
     }
 
-    if (email !== currentUser.email) {
-      const foundUserByEmail = await User.findOne({ email: email });
+    let imageUrl;
 
-      if (foundUserByEmail) {
-        const errorMessage = "User with email already exists";
-
-        res.redirect(`/profile/edit?errorMessage=${errorMessage}`);
-
-        return;
-      }
+    if (req.file) {
+      imageUrl = req.file.path;
+    } else {
+      imageUrl = existingAvatar;
     }
 
-    await User.findByIdAndUpdate(
-      req.session.activeUser._id,
-      {
-        username,
-        email,
-        image: imageUrl,
-      },
-      { new: true }
-    );
+    try {
+      const currentUser = await User.findById(profileId, {
+        username: 1,
+        email: 1,
+      });
 
-    res.redirect("/profile");
-  } catch (error) {
-    next(error);
+      if (username !== currentUser.username) {
+        const foundUserByName = await User.findOne({ username: username });
+
+        if (foundUserByName) {
+          const errorMessage = "User with username already exists";
+
+          res.redirect(`/profile/edit?errorMessage=${errorMessage}`);
+
+          return;
+        }
+      }
+
+      if (email !== currentUser.email) {
+        const foundUserByEmail = await User.findOne({ email: email });
+
+        if (foundUserByEmail) {
+          const errorMessage = "User with email already exists";
+
+          res.redirect(`/profile/edit?errorMessage=${errorMessage}`);
+
+          return;
+        }
+      }
+
+      await User.findByIdAndUpdate(
+        profileId,
+        {
+          username,
+          email,
+          image: imageUrl,
+        },
+        { new: true }
+      );
+
+      res.redirect(`/profile/${profileId}`);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.post("/delete", async (req, res, next) => {
   try {

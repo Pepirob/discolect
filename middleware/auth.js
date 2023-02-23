@@ -1,13 +1,5 @@
 const Review = require("../models/Review.model");
 
-const isLoggedIn = (req, res, next) => {
-  if (!req.session.activeUser) {
-    res.redirect("/auth/login");
-  } else {
-    next();
-  }
-};
-
 const updateUserActiveLocal = (req, res, next) => {
   if (req.session.activeUser === undefined) {
     res.locals.isUserActive = false;
@@ -17,7 +9,7 @@ const updateUserActiveLocal = (req, res, next) => {
   next();
 };
 
-const updateIsOwnerLocal = async (req, res, next) => {
+const updateIsReviewOwnerLocal = async (req, res, next) => {
   try {
     const foundReview = await Review.findById(req.params.reviewId);
     const foundReviewId = foundReview.author.toString();
@@ -26,9 +18,9 @@ const updateIsOwnerLocal = async (req, res, next) => {
       res.locals.isUserActive &&
       foundReviewId === req.session.activeUser._id
     ) {
-      res.locals.isUserOwner = true;
+      res.locals.isReviewOwner = true;
     } else {
-      res.locals.isUserOwner = false;
+      res.locals.isReviewOwner = false;
     }
 
     next();
@@ -36,5 +28,20 @@ const updateIsOwnerLocal = async (req, res, next) => {
     next(error);
   }
 };
+const updateItsMeLocal = (req, res, next) => {
+  if (
+    req.session.activeUser &&
+    req.session.activeUser._id === req.params.profileId
+  ) {
+    res.locals.itsMe = true;
+  } else {
+    res.locals.itsMe = false;
+  }
+  next();
+};
 
-module.exports = { isLoggedIn, updateUserActiveLocal, updateIsOwnerLocal };
+module.exports = {
+  updateUserActiveLocal,
+  updateIsReviewOwnerLocal,
+  updateItsMeLocal,
+};

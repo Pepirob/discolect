@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Review = require("../models/Review.model");
 const User = require("../models/User.model");
-const { updateIsOwnerLocal } = require("../middleware/auth");
+const { updateIsReviewOwnerLocal } = require("../middleware/auth");
 const spotifyApi = require("../config/spotifyApi.config");
 const { joinProperties } = require("../utils");
 
@@ -28,7 +28,9 @@ router.get("/artist-search", (req, res, next) => {
           };
         });
 
-        res.render("review/artist-search-list.hbs", { artistList });
+        res.render("review/artist-search-list.hbs", {
+          artistList,
+        });
       })
       .catch((error) => {
         next(error);
@@ -149,38 +151,50 @@ router.post("/:albumId/create", async (req, res, next) => {
   }
 });
 
-router.get("/:albumId/:reviewId", updateIsOwnerLocal, (req, res, next) => {
-  const { albumId, reviewId } = req.params;
+router.get(
+  "/:albumId/:reviewId",
+  updateIsReviewOwnerLocal,
+  (req, res, next) => {
+    // TODO => DRY to util or middleware
+    const getUserId = () => {
+      if (req.session.activeUser) {
+        return req.session.activeUser._id;
+      }
+    };
 
-  spotifyApi
-    .getAlbum(albumId)
-    .then((response) => {
-      const albumBiggestImage = response.body.images[0].url;
-      const { name } = response.body;
+    const { albumId, reviewId } = req.params;
 
-      Review.findById(reviewId)
-        .populate("author")
-        .then((response) => {
-          const { blogName, image } = response.author;
-          const { content, subheading, rating } = response;
+    spotifyApi
+      .getAlbum(albumId)
+      .then((response) => {
+        const albumBiggestImage = response.body.images[0].url;
+        const { name } = response.body;
 
-          res.render("review/view.hbs", {
-            image,
-            blogName,
-            name,
-            rating,
-            albumBiggestImage,
-            subheading,
-            content,
-            albumId,
-            reviewId,
+        Review.findById(reviewId)
+          .populate("author")
+          .then((response) => {
+            const { blogName, image } = response.author;
+            const { content, subheading, rating } = response;
+
+            res.render("review/view.hbs", {
+              image,
+              blogName,
+              name,
+              rating,
+              albumBiggestImage,
+              subheading,
+              content,
+              albumId,
+              reviewId,
+              userActiveId: getUserId(),
+            });
           });
-        });
-    })
-    .catch((error) => {
-      next(error);
-    });
-});
+      })
+      .catch((error) => {
+        next(error);
+      });
+  }
+);
 
 router.get("/:albumId/:reviewId/edit", (req, res, next) => {
   const { albumId, reviewId } = req.params;
@@ -251,6 +265,14 @@ router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
 });
 
 router.get("/search", async (req, res, next) => {
+  // TODO => DRY to util or middleware
+
+  const getUserId = () => {
+    if (req.session.activeUser) {
+      return req.session.activeUser._id;
+    }
+  };
+
   const { reviewSearch } = req.query;
 
   const searchRegExp = new RegExp(`${reviewSearch}`, "i");
@@ -265,14 +287,26 @@ router.get("/search", async (req, res, next) => {
       })
         .sort({ updatedAt: -1 })
         .populate("author", "_id username")
-        .select({ author: 1, albumImg: 1, albumName: 1, artistsNames: 1 });
+        .select({
+          author: 1,
+          albumImg: 1,
+          albumName: 1,
+          artistNames: 1,
+          spotifyId: 1,
+        });
 
-      res.render("review/review-search-list.hbs", { foundReviews });
+      res.render("review/review-search-list.hbs", {
+        foundReviews,
+        userActiveId: getUserId(),
+      });
     } catch (error) {
       next(error);
     }
   } else {
-    res.render("review/review-search-list.hbs");
+    res.render("review/review-search-list.hbs", {
+      foundReviews,
+      userActiveId: getUserId(),
+    });
   }
 });
 

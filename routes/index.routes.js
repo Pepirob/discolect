@@ -8,13 +8,27 @@ router.use(updateUserActiveLocal);
 
 /* GET home page */
 router.get("/", async (req, res, next) => {
+  // TODO => DRY to util or middleware
+  const getUserId = () => {
+    if (req.session.activeUser) {
+      return req.session.activeUser._id;
+    }
+  };
+
   try {
     const latestEntries = await Review.find()
-      .select({ albumName: 1, albumImg: 1, subheading: 1, spotifyId: 1 })
+      .populate("author", "_id username")
+      .select({
+        author: 1,
+        albumImg: 1,
+        albumName: 1,
+        artistNames: 1,
+        spotifyId: 1,
+      })
       .sort({ updatedAt: -1 })
       .limit(3);
 
-    res.render("index.hbs", { latestEntries });
+    res.render("index.hbs", { latestEntries, userActiveId: getUserId() });
   } catch (error) {
     next(error);
   }
