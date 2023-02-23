@@ -301,15 +301,24 @@ router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
 
 router.get("/search", async (req, res, next) => {
   const { reviewSearch } = req.query;
-  const { page } = req.query;
+  console.log(req.query);
+  let { page = 1 } = req.query;
+
   const getUserId = () => {
     if (req.session.activeUser) {
       return req.session.activeUser._id;
     }
   };
-  const nextPage = parseInt(page) + 1;
 
   const limit = 10;
+  let skip = (parseInt(page) - 1) * limit;
+  let updatePage = page;
+
+  if (req.query.nextPage === "true") {
+    updatePage = parseInt(page) + 1;
+  } else if (req.query.prevPage === "true" && page > 1) {
+    updatePage = parseInt(page) - 1;
+  }
 
   const searchRegExp = new RegExp(`${reviewSearch}`, "i");
 
@@ -322,8 +331,8 @@ router.get("/search", async (req, res, next) => {
         ],
       })
         .sort({ updatedAt: -1 })
-        .skip((parseInt(page) - 1) * limit)
-        .limit(10)
+        .skip(skip)
+        .limit(limit)
         .select({
           author: 1,
           albumImg: 1,
@@ -336,7 +345,7 @@ router.get("/search", async (req, res, next) => {
       res.render("review/review-search-list.hbs", {
         foundReviews,
         userActiveId: getUserId(),
-        nextPage,
+        updatePage,
         reviewSearch,
       });
     } catch (error) {

@@ -8,14 +8,37 @@
     <h1>NO SEARCH RESULTS</h1>
     <p>Please try again with another search</p>
   {{/if}}
-   <form action="/review/search" method="get">
-    <input type="text" value="los huevos del valenciano" hidden>
+
+  
+
+  <form action="/review/search" method="get">
     <input type="hidden" name="reviewSearch" value="{{reviewSearch}}">
-    <input type="hidden" name="page" value="{{this.nextPage}}" />
+    <input type="hidden" name="prevPage"/ value="true">
+    <input type="hidden" name="page" value="{{updatePage}}" />
+    <button>BACK</button>
+  </form>
+
+
+  <form action="/review/search" method="get">
+    <input type="hidden" name="reviewSearch" value="{{reviewSearch}}">
+    <input type="hidden" name="nextPage" value="true"/>
+    <input type="hidden" name="page" value="{{updatePage}}" />
+    <button>NEXT</button>
+  </form>
+
+
+   {{!-- <form action="/review/search" method="get">
+    <input type="hidden" name="reviewSearch" value="{{reviewSearch}}">
+    <input type="hidden" name="prevPage" value="{{page}}" />
+    <button>BACK</button>
+  </form>
+   <form action="/review/search" method="get">
+    <input type="hidden" name="reviewSearch" value="{{reviewSearch}}">
+    <input type="hidden" name="nextPage" value="{{page}}" />
     <button>NEXT</button>
   </form>
   <form action="/review/search" method="get"></form>
-  <ul>
+  <ul> --}}
     {{#each foundReviews}}
     <li>
       <a href="/review/{{this.spotifyId}}/{{this._id}}">
