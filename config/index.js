@@ -30,6 +30,7 @@ module.exports = (app) => {
   // To have access to `body` property in the request
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
+  app.use(express.query());
   app.use(cookieParser());
 
   // Normalizes the paths to the views and partials

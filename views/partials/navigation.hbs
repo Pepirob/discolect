@@ -1,16 +1,19 @@
 <nav>
-  <form action="/review/search" post="get">
+  <form action="/review/search" method="get">
     <label for="reviewSearch">SEARCH ALBUM REVIEWS: </label>
     <input type="text" name="reviewSearch" />
     <button>SEARCH</button>
   </form>
   <a style="margin-right: .5rem" href="/">HOME</a>
   {{#if isUserActive}}
-  <a style="margin-right: .5rem" href="/profile/{{this.userActiveId}}">PROFILE</a>
-  <a style="margin-right: .5rem" href="/review/artist-search">CREATE REVIEW</a>
-  <a style="color: red; margin-right: .5rem" href="/auth/logout">LOGOUT</a>
+    <a
+      style="margin-right: .5rem"
+      href="/profile/{{this.userActiveId}}"
+    >PROFILE</a>
+    <a style="margin-right: .5rem" href="/review/artist-search">CREATE REVIEW</a>
+    <a style="color: red; margin-right: .5rem" href="/auth/logout">LOGOUT</a>
   {{else}}
-  <a style="margin-right: .5rem" href="/auth/signup">SIGNUP</a>
-  <a style="margin-right: .5rem" href="/auth/login">LOGIN</a>
+    <a style="margin-right: .5rem" href="/auth/signup">SIGNUP</a>
+    <a style="margin-right: .5rem" href="/auth/login">LOGIN</a>
   {{/if}}
 </nav>

@@ -301,15 +301,15 @@ router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
 });
 
 router.get("/search", async (req, res, next) => {
-  // TODO => DRY to util or middleware
-
+  const { reviewSearch } = req.query;
+  const { page } = req.query;
   const getUserId = () => {
     if (req.session.activeUser) {
       return req.session.activeUser._id;
     }
   };
-
-  const { reviewSearch } = req.query;
+  const nextPage = parseInt(page) + 1;
+  const limit = 10;
 
   const searchRegExp = new RegExp(`${reviewSearch}`, "i");
 
@@ -322,25 +322,28 @@ router.get("/search", async (req, res, next) => {
         ],
       })
         .sort({ updatedAt: -1 })
-        .populate("author", "_id username")
+        .skip((parseInt(page) - 1) * limit)
+        .limit(10)
         .select({
           author: 1,
           albumImg: 1,
           albumName: 1,
           artistNames: 1,
           spotifyId: 1,
-        });
+        })
+        .populate("author", "username");
 
       res.render("review/review-search-list.hbs", {
         foundReviews,
         userActiveId: getUserId(),
+        nextPage,
+        reviewSearch,
       });
     } catch (error) {
       next(error);
     }
   } else {
     res.render("review/review-search-list.hbs", {
-      foundReviews,
       userActiveId: getUserId(),
     });
   }

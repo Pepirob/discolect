@@ -3,13 +3,18 @@
 </header>
 <main>
   {{#if foundReviews}}
-  <h1>SEARCH REVIEW RESULTS</h1>
+    <h1>SEARCH REVIEW RESULTS</h1>
   {{else}}
-
-  <h1>NO SEARCH RESULTS</h1>
-  <p>Please try again with another search</p>
-
+    <h1>NO SEARCH RESULTS</h1>
+    <p>Please try again with another search</p>
   {{/if}}
+   <form action="/review/search" method="get">
+    <input type="text" value="los huevos del valenciano" hidden>
+    <input type="hidden" name="reviewSearch" value="{{reviewSearch}}">
+    <input type="hidden" name="page" value="{{nextPage}}" />
+    <button>NEXT</button>
+  </form>
+  <form action="/review/search" method="get"></form>
   <ul>
     {{#each foundReviews}}
     <li>
