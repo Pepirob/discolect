@@ -68,56 +68,56 @@ router.get("/:artistId/album-choose", (req, res, next) => {
 
 router.get("/:albumId/create", async (req, res, next) => {
   const { albumId } = req.params;
-  const { _id } = req.session.activeUser;
+  const { _id, username } = req.session.activeUser;
   const { errorMessage } = req.query;
 
   try {
     const albumResponse = await spotifyApi.getAlbum(albumId);
 
-    const { artists, name, label, release_date } = albumResponse.body;
+    const {
+      artists,
+      name,
+      label,
+      release_date,
+      images: [biggest, ...rest],
+    } = albumResponse.body;
 
-    const promiseQeue = artists.map((artist) =>
+    const artistNames = joinProperties(albumResponse.body.artists, "name");
+    const albumImage = biggest.url;
+    const releaseYear = release_date.slice(0, 4);
+
+    const artistCalls = artists.map((artist) =>
       spotifyApi.getArtist(artist["id"])
     );
 
     const foundArtists = await Promise.all(
-      promiseQeue.map(async (artist) => {
-        const response = await artist;
+      artistCalls.map(async (call) => {
+        const response = await call;
         return response;
       })
     );
+
+    const allGenres = foundArtists
+      .map((artistResponse) => artistResponse.body.genres)
+      .reduce((acc, artistGenres) => acc.concat(artistGenres), []);
+
+    const genres = [...new Set(allGenres)].join(", ");
+
+    res.render("review/form-create.hbs", {
+      albumImage,
+      artistNames,
+      albumName: name,
+      username,
+      label,
+      genres,
+      releaseYear,
+      albumId,
+      image: response.image,
+      errorMessage,
+    });
   } catch (error) {
     next(error);
   }
-  // spotifyApi
-  //   .getAlbum(albumId)
-  //   .then((albumResponse) => {
-  //     const { name, label, release_date } = albumResponse.body;
-
-  //     spotifyApi.getArtists("franco battiato").then((artistResponse) => {
-  //       console.log(artistResponse);
-  //       const artistNames = joinProperties(albumResponse.body.artists, "name");
-  //       const albumBiggestImage = albumResponse.body.images[0].url;
-  //       const releaseYear = release_date.slice(0, 4);
-
-  //       User.findById(_id).then((response) => {
-  //         res.render("review/form-create.hbs", {
-  //           albumBiggestImage,
-  //           artistNames,
-  //           name,
-  //           label,
-  //           genres,
-  //           releaseYear,
-  //           albumId,
-  //           image: response.image,
-  //           errorMessage,
-  //         });
-  //       });
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     next(error);
-  //   });
 });
 
 router.post("/:albumId/create", async (req, res, next) => {
@@ -188,7 +188,7 @@ router.get(
     spotifyApi
       .getAlbum(albumId)
       .then((response) => {
-        const albumBiggestImage = response.body.images[0].url;
+        const albumImage = response.body.images[0].url;
         const { name } = response.body;
 
         Review.findById(reviewId)
@@ -202,7 +202,7 @@ router.get(
               blogName,
               name,
               rating,
-              albumBiggestImage,
+              albumImage,
               subheading,
               content,
               albumId,
@@ -224,7 +224,7 @@ router.get("/:albumId/:reviewId/edit", (req, res, next) => {
     .getAlbum(albumId)
     .then((response) => {
       const artistNames = joinProperties(response.body.artists, "name");
-      const albumBiggestImage = response.body.images[0].url;
+      const albumImage = response.body.images[0].url;
       const { name, label, release_date } = response.body;
       const releaseYear = release_date.slice(0, 4);
 
@@ -242,7 +242,7 @@ router.get("/:albumId/:reviewId/edit", (req, res, next) => {
             blogName,
             name,
             rating,
-            albumBiggestImage,
+            albumImage,
             subheading,
             content,
             albumId,
