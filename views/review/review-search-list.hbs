@@ -11,11 +11,11 @@
   </section>
 
   <section class="container">
-    <ul class="search-list">
+    <ul class="grid-list">
       {{#each foundReviews}}
-      <li class="search-list-item">
+      <li class="grid-list-item">
         <a href="/review/{{this.spotifyId}}/{{this._id}}">
-          <img class="search-list-image" src="{{this.albumImg}}" alt="cover art from {{albumName}}">
+          <img class="grid-list-image" src="{{this.albumImg}}" alt="cover art from {{albumName}}">
           <h3 class="list-item-heading">{{this.albumName}}</h3>
           <h4 class="list-item-subheading">{{this.artistNames}}</h4>
         </a>

@@ -1,28 +1,30 @@
 {{>navigationHeader this}}
 
 <main>
-  <aside>
-    <img src="{{image}}" alt="this is a picture of {{username}}" width="300" />
-    <h2>{{username}}</h2>
-    <h3>Joined on {{registerDate}}</h3>
-    {{#if itsMe}}
-    <a href="/profile/{{userActiveId}}/edit">EDIT PROFILE</a>
-    {{/if}}
-  </aside>
-  <section>
-    <h1>Reviews on {{blogName}}</h1>
-    <ul>
-      {{#each userReviews}}
-      <li>
-        <a href="/review/{{this.spotifyId}}/{{this._id}}">
-          <img src="{{this.albumImg}}" alt="Cover art from {{this.albumName}}" width="150">
-          <div>
-            <h2>{{this.albumName}}</h2>
-            <h3>{{this.artistNames}}</h3>
-          </div>
-        </a>
-      </li>
-      {{/each}}
-    </ul>
-  </section>
+  <article class="profile container container-first">
+    <aside class="profile-details">
+      <img class="profile-pic" src="{{image}}" alt="this is a picture of {{username}}" width="300" />
+      <h2 class="profile-heading">{{username}}</h2>
+      <h3 class="profile-subheading">Joined on {{registerDate}}</h3>
+      {{#if itsMe}}
+      <a class="button button-ghost" href="/profile/{{userActiveId}}/edit">EDIT PROFILE</a>
+      {{/if}}
+    </aside>
+    <section>
+      <h1 class="profile-reviews-heading">Reviews on {{blogName}}</h1>
+      <ul class="grid-list">
+        {{#each userReviews}}
+        <li class="grid-list">
+          <a href="/review/{{this.spotifyId}}/{{this._id}}">
+            <img class="grid-list-image" src="{{this.albumImg}}" alt="Cover art from {{this.albumName}}" width="150">
+            <div>
+              <h2 class="list-item-heading">{{this.albumName}}</h2>
+              <h3 class="list-item-subheading ">{{this.artistNames}}</h3>
+            </div>
+          </a>
+        </li>
+        {{/each}}
+      </ul>
+    </section>
+  </article>
 </main>
