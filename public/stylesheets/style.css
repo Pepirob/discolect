@@ -7,7 +7,18 @@
 }
 
 fieldset {
-  width: 60vw;
+  width: 90vw;
+}
+
+@media (min-width: 768px) {
+  fieldset {
+    width: 95vw;
+  }
+}
+@media (min-width: 1024px) {
+  fieldset {
+    width: 60vw;
+  }
 }
 
 body {
@@ -59,12 +70,12 @@ input {
   background-color: var(--color-background);
   box-shadow: 7px 2px 11px var(--color-white);
   width: 100vw;
+  padding: 1rem;
 }
 
 .header-navigation {
   display: flex;
   flex-direction: column-reverse;
-  padding: 1rem;
 }
 
 .header-navigation-list {
