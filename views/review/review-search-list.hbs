@@ -1,26 +1,29 @@
 {{>navigationHeader this}}
 
 <main>
-  {{#if foundReviews}}
-  <h1>SEARCH REVIEW RESULTS</h1>
-  {{else}}
+  <section class="container container-first">
+    {{#if foundReviews}}
+    <h1>SEARCH REVIEW RESULTS</h1>
+    {{else}}
+    <h1>NO SEARCH RESULTS</h1>
+    <p>Please try again with another search</p>
+    {{/if}}
+  </section>
 
-  <h1>NO SEARCH RESULTS</h1>
-  <p>Please try again with another search</p>
-
-  {{/if}}
-  <ul>
-    {{#each foundReviews}}
-    <li>
-      <a href="/review/{{this.spotifyId}}/{{this._id}}">
-        <img src="{{this.albumImg}}" alt="cover art from {{albumName}}" width="100">
-        <h3>{{this.albumName}}</h3>
-        <h4>{{this.artistNames}}</h4>
-      </a>
-      <a href="/profile/{{this.author._id}}">
-        <h5>{{this.author.username}}</h5>
-      </a>
-    </li>
-    {{/each}}
-  </ul>
+  <section class="container">
+    <ul class="search-list">
+      {{#each foundReviews}}
+      <li class="search-list-item">
+        <a href="/review/{{this.spotifyId}}/{{this._id}}">
+          <img class="search-list-image" src="{{this.albumImg}}" alt="cover art from {{albumName}}">
+          <h3 class="list-item-heading">{{this.albumName}}</h3>
+          <h4 class="list-item-subheading">{{this.artistNames}}</h4>
+        </a>
+        <a href="/profile/{{this.author._id}}">
+          <h5 class="list-item-subheading">{{this.author.username}}</h5>
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </section>
 </main>
