@@ -3,22 +3,26 @@
 </header>
 
 <main>
-  <h1>Sign in to {{appTitle}}</h1>
-  <form action="/auth/login" method="post">
-    <fieldset>
-      <legend>Here your awesome credentials!</legend>
-      <div>
-        <label for="username">USERNAME: </label>
-        <input type="text" name="username" required />
-      </div>
-      <div>
-        <label for="password">PASSWORD: </label>
-        <input type="password" name="password" required />
-      </div>
-      {{#if errorMessage}}
-      <p style="color:red;">{{errorMessage}}</p>
-      {{/if}}
-      <button>LOGIN</button>
-    </fieldset>
-  </form>
+  <section class="container container-first">
+    <h1>Sign in to {{appTitle}}</h1>
+  </section>
+  <section class="container">
+    <form action="/auth/login" method="post">
+      <fieldset>
+        <legend>Here your awesome credentials!</legend>
+        <div>
+          <label for="username">USERNAME: </label>
+          <input type="text" name="username" required />
+        </div>
+        <div>
+          <label for="password">PASSWORD: </label>
+          <input type="password" name="password" required />
+        </div>
+        {{#if errorMessage}}
+        <p style="color:red;">{{errorMessage}}</p>
+        {{/if}}
+        <button>LOGIN</button>
+      </fieldset>
+    </form>
+  </section>
 </main>
