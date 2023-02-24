@@ -178,6 +178,11 @@ main {
   margin-bottom: 1rem;
 }
 
+.home-logo {
+  width: 17rem;
+  margin-bottom: 3rem;
+}
+
 .home-subheading {
   font-size: 1.5rem;
   margin-bottom: 1rem;
@@ -202,6 +207,13 @@ main {
   font-weight: normal;
   font-size: 1rem;
   margin-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .home-logo {
+    width: 25rem;
+    margin-bottom: 3rem;
+  }
 }
 
 @media (min-width: 1024px) {
