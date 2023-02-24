@@ -1,3 +1,18 @@
+<<<<<<< Updated upstream
+=======
+:root {
+  --color-background: #16181c;
+  --color-white: #eff3f4;
+  --color-links: #f7f3c6;
+  --color-primary: #370753;
+  --radius-buttons: 5px;
+}
+
+fieldset {
+  width: 60vw;
+}
+
+>>>>>>> Stashed changes
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <h1>EDIT REVIEW</h1>
 
 <section>
@@ -27,3 +28,18 @@
     <button>EDIT REVIEW</button>
   </form>
 </section>
+=======
+<main>
+  <section class="container">
+    <h1 class="profile-reviews-heading">{{albumName}}</h1>
+  </section>
+  <section class="container">
+    {{>albumSheet this}}
+  </section>
+  <section class="container">
+    <form action="/review/{{albumId}}/{{reviewId}}/edit" method="post">
+      {{>reviewForm this}}
+    </form>
+  </section>
+</main>
+>>>>>>> Stashed changes
