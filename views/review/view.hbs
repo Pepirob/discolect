@@ -1,36 +1,37 @@
 {{>navigationHeader this}}
 
 <main>
-  <article>
-    <section>
-      <h2>{{blogName}}</h2>
-      <h1>{{albumName}}</h1>
-    </section>
+  <section class="container container-first">
+    <h2 class="review-heading">{{blogName}}</h2>
+    <h1 class="review-subheading">{{albumName}}</h1>
+  </section>
 
-    {{>albumSheet this}}
+  {{>albumSheet this}}
 
-    <section>
-      <img src="{{authorImage}}" alt="image from blog {{blogName}}" width="150" />
-      <div>
+  <section class="container">
+    <div class="review-author">
+      <img class="review-author-pic" src="{{authorImage}}" alt="image from blog {{blogName}}" width="150" />
+      <div class="review-author-details">
         <h2>{{rating}}/10</h2>
         <h3>Reviewed by:
           <a href="/profile/{{authorId}}">{{authorName}}</a>
         </h3>
         <h3>{{reviewDate}}</h3>
+        {{#if isReviewOwner}}
+        <div>
+          <a href="/review/{{albumId}}/{{reviewId}}/edit">EDIT</a>
+          <form action="/review/{{albumId}}/{{reviewId}}/delete" method="post">
+            <button>DELETE REVIEW</button>
+          </form>
+        </div>
+        {{/if}}
       </div>
-      {{#if isReviewOwner}}
-      <div>
-        <a href="/review/{{albumId}}/{{reviewId}}/edit">EDIT</a>
-        <form action="/review/{{albumId}}/{{reviewId}}/delete" method="post">
-          <button>DELETE REVIEW</button>
-        </form>
-      </div>
-      {{/if}}
-    </section>
+    </div>
+  </section>
 
-    <section>
-      <h2>{{subheading}}</h2>
-      <p>{{content}}</p>
-    </section>
-  </article>
+  <section class="container">
+    <h2 class="review-subheading">{{subheading}}</h2>
+    <p class="review-content">{{content}}</p>
+  </section>
+
 </main>

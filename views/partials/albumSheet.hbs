@@ -1,12 +1,15 @@
-<section>
-    <img src="{{albumImg}}" alt="Album cover of {{name}}" width="300" />
-    <h2>by {{artistNames}}</h2>
-    {{#if genres}}
-    <h3>Genres: {{genres}}</h3>
-    {{/if}}
-    <h4>Label: {{label}}</h4>
-    <h4>Released: {{releaseYear}}</h4>
-    {{#if username}}
-    <h5>Reviewed by: {{username}}</h5>
-    {{/if}}
+<section class="container sheet-container">
+    <img class="sheet-pic" src="{{albumImg}}" alt="Album cover of {{name}}" />
+    <div>
+        <h2 class="sheet-heading">by {{artistNames}}</h2>
+        {{#if genres}}
+        <h3 class="sheet-subheading">Genres: {{genres}}</h3>
+        {{/if}}
+        <h4 class="sheet-subheading">Label: {{label}}</h4>
+        <h4 class="sheet-subheading">Released: {{releaseYear}}</h4>
+        {{#if username}}
+        <h5 class="sheet-subheading">Reviewed by: {{username}}</h5>
+        {{/if}}
+
+    </div>
 </section>
