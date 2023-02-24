@@ -6,6 +6,10 @@
   --radius-buttons: 5px;
 }
 
+fieldset {
+  width: 60vw;
+}
+
 body {
   margin: 0;
   font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
