@@ -1,22 +1,24 @@
-<h1>SEARCH ARTIST</h1>
-<form action="">
-    <label for="artist">TYPE THE ALBUM'S ARTIST:</label>
-    <input type="text" name="artist">
-    <button>SEARCH</button>
-</form>
-<ul>
-    {{#each artistList}}
-    <li>
-        <a href="/review/{{this.id}}/album-choose">
-
-            {{#if this.thumbnail.url}}
-            <img src="{{this.thumbnail.url}}" alt="A picture of {{this.name}}">
-            {{else}}
-            <img src="{{this.fallbackImg}}" alt="No pictures available" width="140">
-            {{/if}}
-
-            <h3>{{this.name}}</h3>
-        </a>
-    </li>
-    {{/each}}
-</ul>
+<section class="container container-first">
+    <h1>SEARCH ARTIST</h1>
+    <form action="">
+        <label for="artist">TYPE THE ALBUM'S ARTIST:</label>
+        <input type="text" name="artist">
+        <button class="button button-primary">SEARCH</button>
+    </form>
+</section>
+<section class="container">
+    <ul class="grid-list">
+        {{#each artistList}}
+        <li classs="grid-list-item">
+            <a href="/review/{{this.id}}/album-choose">
+                {{#if this.thumbnail.url}}
+                <img class="grid-list-image" src="{{this.thumbnail.url}}" alt="A picture of {{this.name}}">
+                {{else}}
+                <img class="grid-list-image" src="{{this.fallbackImg}}" alt="No pictures available" width="140">
+                {{/if}}
+                <h3>{{this.name}}</h3>
+            </a>
+        </li>
+        {{/each}}
+    </ul>
+</section>

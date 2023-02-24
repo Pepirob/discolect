@@ -66,8 +66,10 @@ router.get("/:artistId/album-choose", (req, res, next) => {
 
 router.get("/:albumId/create", async (req, res, next) => {
   const { albumId } = req.params;
-  const { _id, username } = req.session.activeUser;
+  const { username } = req.session.activeUser;
   const { errorMessage } = req.query;
+  const formLiteral = "DO YOUR REVIEW HERE";
+  const submitLiteral = "SUBMIT";
 
   try {
     const albumResponse = await spotifyApi.getAlbum(albumId);
@@ -81,7 +83,7 @@ router.get("/:albumId/create", async (req, res, next) => {
     } = albumResponse.body;
 
     const artistNames = joinProperties(albumResponse.body.artists, "name");
-    const albumImage = biggest.url;
+    const albumImg = biggest.url;
     const releaseYear = release_date.slice(0, 4);
 
     const artistCalls = artists.map((artist) =>
@@ -102,7 +104,7 @@ router.get("/:albumId/create", async (req, res, next) => {
     const genres = [...new Set(allGenres)].join(", ");
 
     res.render("review/form-create.hbs", {
-      albumImage,
+      albumImg,
       artistNames,
       albumName: name,
       username,
@@ -111,6 +113,8 @@ router.get("/:albumId/create", async (req, res, next) => {
       releaseYear,
       albumId,
       errorMessage,
+      formLiteral,
+      submitLiteral,
     });
   } catch (error) {
     next(error);
@@ -203,10 +207,12 @@ router.get(
 
       const reviewResponse = await Review.findById(reviewId).populate("author");
 
-      const { content, subheading, rating, albumImg, albumName } =
+      const { content, subheading, rating, albumImg, albumName, updatedAt } =
         reviewResponse;
 
       const { blogName, image, username, _id } = reviewResponse.author;
+
+      const reviewDate = new Date(updatedAt).toLocaleDateString();
 
       res.render("review/view.hbs", {
         artistNames,
@@ -216,6 +222,7 @@ router.get(
         authorImage: image,
         authorName: username,
         authorId: _id,
+        reviewDate,
         blogName,
         rating,
         albumImg,
@@ -238,29 +245,34 @@ router.get("/:albumId/:reviewId/edit", (req, res, next) => {
     .getAlbum(albumId)
     .then((response) => {
       const artistNames = joinProperties(response.body.artists, "name");
-      const albumImage = response.body.images[0].url;
-      const { name, label, release_date } = response.body;
+      const albumImg = response.body.images[0].url;
+      const { label, release_date } = response.body;
       const releaseYear = release_date.slice(0, 4);
+      const formLiteral = "EDIT YOUR REVIEW";
+      const submitLiteral = "UPDATE";
 
       Review.findById(reviewId)
         .populate("author")
         .then((response) => {
-          const { blogName, image } = response.author;
-          const { content, subheading, rating } = response;
+          const { blogName, image, username } = response.author;
+          const { content, subheading, rating, albumName } = response;
 
           res.render("review/form-edit.hbs", {
+            albumName,
             artistNames,
             label,
             releaseYear,
+            username,
             image,
             blogName,
-            name,
             rating,
-            albumImage,
+            albumImg,
             subheading,
             content,
             albumId,
             reviewId,
+            formLiteral,
+            submitLiteral,
           });
         });
     })
@@ -339,7 +351,6 @@ router.get("/search", async (req, res, next) => {
     }
   } else {
     res.render("review/review-search-list.hbs", {
-      foundReviews,
       userActiveId: getUserId(),
     });
   }

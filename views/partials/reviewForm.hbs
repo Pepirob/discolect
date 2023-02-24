@@ -1,0 +1,18 @@
+<fieldset>
+    <legend>{{formLiteral}}</legend>
+    <div>
+        <label for="rating">RATING: </label>
+        <input type="number" name="rating" min="0" max="10" value="{{rating}}" required />
+    </div>
+    <div>
+        <label for="subheading">SUBHEADING: </label>
+        <input type="text" name="subheading" maxlength="500" value="{{subheading}}" required />
+    </div>
+    <div>
+        <textarea name="content" rows="15" cols="50" maxlength='“5500"' required>{{content}}</textarea>
+    </div>
+    {{#if errorMessage}}
+    <p style="color:red;">{{errorMessage}}</p>
+    {{/if}}
+    <button>{{submitLiteral}}</button>
+</fieldset>

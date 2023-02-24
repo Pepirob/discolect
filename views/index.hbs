@@ -1,22 +1,25 @@
-<header>
-  {{>navigation this}}
-</header>
-<main>
-  <h1>{{appTitle}} \m/</h1>
-  <h2>Latest Entries</h2>
-  <ul>
-    {{#each latestEntries}}
-    <li>
-      <a href="/review/{{this.spotifyId}}/{{this._id}}">
-        <img src="{{this.albumImg}}" alt="Cover {{this.albumName}}" width="150">
-        <h3>{{this.albumName}}</h3>
-        <h4>{{this.artistNames}}</h4>
-      </a>
-      <a href="/profile/{{this.author._id}}">
-        <h5>{{this.author.username}}</h5>
-      </a>
-      </a>
-    </li>
-    {{/each}}
-  </ul>
+{{>navigationHeader this}}
+
+<main class="home">
+  <section class="container container-first">
+    <h1 class="home-heading">{{appTitle}} \m/</h1>
+    <h2 class="home-subheading">Our latest album reviews are:</h2>
+  </section>
+  <section class="container">
+    <ul class="home-list">
+      {{#each latestEntries}}
+      <li class="home-list-item">
+        <a href="/review/{{this.spotifyId}}/{{this._id}}">
+          <img class="home-list-image" src="{{this.albumImg}}" alt="Cover {{this.albumName}}">
+          <h3 class="list-item-heading">{{this.albumName}}</h3>
+          <h4 class="list-item-subheading">{{this.artistNames}}</h4>
+        </a>
+        <a href="/profile/{{this.author._id}}">
+          <h5 class="list-item-subheading">Reviewed by {{this.author.username}}</h5>
+        </a>
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </section>
 </main>

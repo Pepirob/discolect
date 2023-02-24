@@ -1,12 +1,18 @@
-<h1>ALBUMS FROM {{artistName}}</h1>
+<main>
+  <section class="container">
+    <h1 class="profile-reviews-heading">ALBUMS FROM {{artistName}}</h1>
+  </section>
+  <section class="container">
+    <ul class="grid-list">
+      {{#each albumList}}
+      <li classs="grid-list-item">
+        <a href="/review/{{this.id}}/create">
+          <img src="{{this.thumbnail.url}}" alt="A picture of {{this.name}}">
+          <h3>{{this.name}}</h3>
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+  </section>
 
-<ul>
-  {{#each albumList}}
-  <li>
-    <a href="/review/{{this.id}}/create">
-      <img src="{{this.thumbnail.url}}" alt="A picture of {{this.name}}">
-      <h3>{{this.name}}</h3>
-    </a>
-  </li>
-  {{/each}}
-</ul>
+</main>

@@ -1,16 +1,25 @@
 <nav>
-  <form action="/review/search" post="get">
-    <label for="reviewSearch">SEARCH ALBUM REVIEWS: </label>
-    <input type="text" name="reviewSearch" />
-    <button>SEARCH</button>
-  </form>
-  <a style="margin-right: .5rem" href="/">HOME</a>
-  {{#if isUserActive}}
-  <a style="margin-right: .5rem" href="/profile/{{this.userActiveId}}">PROFILE</a>
-  <a style="margin-right: .5rem" href="/review/artist-search">CREATE REVIEW</a>
-  <a style="color: red; margin-right: .5rem" href="/auth/logout">LOGOUT</a>
-  {{else}}
-  <a style="margin-right: .5rem" href="/auth/signup">SIGNUP</a>
-  <a style="margin-right: .5rem" href="/auth/login">LOGIN</a>
-  {{/if}}
+  <ul class="header-navigation-list">
+    <li>
+      <a class="header-navigation-item" href="/">HOME</a>
+    </li>
+    {{#if isUserActive}}
+    <li>
+      <a class="header-navigation-item" href="/profile/{{this.userActiveId}}">PROFILE</a>
+    </li>
+    <li>
+      <a class="header-navigation-item" href="/review/artist-search">CREATE REVIEW</a>
+    </li>
+    <li>
+      <a class="header-navigation-item" style="color: red;" href=" /auth/logout">LOGOUT</a>
+    </li>
+    {{else}}
+    <li>
+      <a class="header-navigation-item" href="/auth/signup">SIGNUP</a>
+    </li>
+    <li>
+      <a class="header-navigation-item" href="/auth/login">LOGIN</a>
+    </li>
+    {{/if}}
+  </ul>
 </nav>

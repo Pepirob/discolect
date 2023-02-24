@@ -1,37 +1,37 @@
-<header>
-  {{>navigation this}}
-</header>
+{{>navigationHeader this}}
 
 <main>
-  <article>
-    <section>
-      <h2>{{blogName}}'s Blog</h2>
-      <h1>{{albumName}}</h1>
-    </section>
+  <section class="container container-first">
+    <h2 class="review-heading">{{blogName}}</h2>
+    <h1 class="review-subheading">{{albumName}}</h1>
+  </section>
 
-    <section>
-      <img src="{{albumImg}}" alt="Album cover of {{name}}" width="300" />
-      <h3>by {{artistNames}}</h3>
-      <h4>Genres: {{genres}}</h4>
-      <h4>Label: {{label}}</h4>
-      <h4>Released: {{releaseYear}}</h4>
-      <h3>{{rating}}/10</h3>
-      <img src="{{authorImage}}" alt="image from blog {{blogName}}" width="150" />
-      <h5>Reviewed by:
-        <a href="/profile/{{authorId}}">{{authorName}}</a>
-      </h5>
+  {{>albumSheet this}}
 
-      {{#if isReviewOwner}}
-      <a href="/review/{{albumId}}/{{reviewId}}/edit">EDIT</a>
-      <form action="/review/{{albumId}}/{{reviewId}}/delete" method="post">
-        <button>DELETE REVIEW</button>
-      </form>
-      {{/if}}
-    </section>
+  <section class="container">
+    <div class="review-author">
+      <img class="review-author-pic" src="{{authorImage}}" alt="image from blog {{blogName}}" width="150" />
+      <div class="review-author-details">
+        <h2>{{rating}}/10</h2>
+        <h3>Reviewed by:
+          <a href="/profile/{{authorId}}">{{authorName}}</a>
+        </h3>
+        <h3>{{reviewDate}}</h3>
+        {{#if isReviewOwner}}
+        <div>
+          <a href="/review/{{albumId}}/{{reviewId}}/edit">EDIT</a>
+          <form action="/review/{{albumId}}/{{reviewId}}/delete" method="post">
+            <button>DELETE REVIEW</button>
+          </form>
+        </div>
+        {{/if}}
+      </div>
+    </div>
+  </section>
 
-    <section>
-      <h2>{{subheading}}</h2>
-      <p>{{content}}</p>
-    </section>
-  </article>
+  <section class="container">
+    <h2 class="review-subheading">{{subheading}}</h2>
+    <p class="review-content">{{content}}</p>
+  </section>
+
 </main>
