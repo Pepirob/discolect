@@ -8,7 +8,7 @@ This project is generated with [Ironlauncher](https://www.npmjs.com/package/iron
 
 ## Product Description
 
-DiscoLect is platform for amateur music album reiviewing. Users can easily start a blog anc quickly do a review with prefiled album detail sheets from Spotify API. After creating a reviewe, albums are stored as references in DB on the review model; reviews can be browsed by using a search engine based on artists and their albums, so search results allow visiting the reviews and the author's profiles.
+DiscoLect is platform for amateur music album reviewing. Users can easily start a blog and quickly do a review with pre-filled album details' sheets from Spotify API. After creating a review, albums are stored as references in DB on the review model; reviews can be browsed by using a search engine based on artists and their albums, thus search results allow visiting the reviews and the author's profiles.
 
 ![Logo Talent Match](Discolect_Logo_All.png)
 
@@ -75,42 +75,48 @@ yarn rev
   - redirects to / if user logged in
   - renders the signup form
 - POST /auth/signup
+
   - redirects to / if user logged in
 
 - GET /auth/login
   - redirects to / if user logged in
   - renders the login form
 - POST /auth/login
+
   - redirects to / if user logged in
 
 - POST /auth/logout
+
   - redirects /auth/login user logged in
 
 - GET /review/search-artist
   - renders the artist list to choose album
 - GET /review/:artistID/album-choose
+
   - renders the album to review list
 
 - GET /review/:albumID/create
   - renders the review create form
 - POST /review/:albumID/create
+
   - Creates a review document in our DB, redirects to it's view
 
-- GET /review/:albumID/create
-  - renders the review create form 
-
 - GET /review/search
+
   - renders the review search results, based on artist or album name
 
 - GET /review/:albumID/:reviewId/edit
   - renders the review edit form
 - POST /review/:albumID/:reviewId/edit
+
   - updates the review
 
 - POST /review/:albumID/:reviewId/delete
+
   - destroy review
 
 - GET /profile/:userID
+
   - renders the user profile
 
 - GET /profile/:userID/edit
@@ -122,19 +128,14 @@ yarn rev
 - POST /profile/:userID/delete
   - destroy user profile
 
-
 ## Links
 
 ### Git
-
-The url to your repository and to your deployed project
 
 [Repository Link](https://github.com/Pepirob/discolect)
 
 [Deploy Link](https://discolect.cyclic.app/)
 
 ### Slides
-
-The url to your presentation slides
 
 [Slides Link](https://docs.google.com/presentation/d/1W5_pNIZ5BnTcpOcTVmFRKc0Hpfymhop6WX7ekDY6KNI/edit#slide=id.p)
