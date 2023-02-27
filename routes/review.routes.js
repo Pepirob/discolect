@@ -305,7 +305,7 @@ router.post("/:albumId/:reviewId/delete", async (req, res, next) => {
 
   try {
     await Review.findByIdAndDelete(reviewId);
-    res.redirect("/profile");
+    res.redirect(`/profile/${req.session.activeUser._id}`);
   } catch (error) {
     next(error);
   }
